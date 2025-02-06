@@ -6,7 +6,7 @@ import os
 # Add path to my package (ensure you add the directory, not the file itself)
 sys.path.append(os.path.abspath('VaspDefAnalysis/convergence'))
 
-from utils_convergence import ConvergenceTools
+from VaspDefAnalysis.convergence.utils_convergence import ConvergenceTools
 
 class ConvergencePlot(ConvergenceTools):
     def __init__(self, 
