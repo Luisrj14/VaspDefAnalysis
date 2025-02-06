@@ -12,37 +12,72 @@ class ConvergencePlot(ConvergenceTools):
     def __init__(self, 
                  title_name: str,
                  axis_x_name: str,
-                 axis_y_name: str = r'$|\Delta E|$ [eV/#atoms]', 
-                 difference_energies_unit_meV = False,
-                 conv_criterion_unit:str= None
+                 axis_y_name: str, 
+                 label_relative_values:str,
+                 label_conv_criterion:str
                  ):
-        """Initialize the plot with labels and optional save flag."""
-        self.difference_energies_unit_meV = difference_energies_unit_meV
-        self.conv_criterion_unit = conv_criterion_unit
-        # Ensure all names are strings
-        if isinstance(title_name, str) and isinstance(axis_y_name, str) and isinstance(axis_x_name, str):
-            self.title_name = title_name
-            self.axis_y_name = axis_y_name
-            self.axis_x_name = axis_x_name
-        else:
-            raise ValueError(f'{title_name}, {axis_y_name}, and {axis_x_name} must all be strings.')
+        """Initialize the plot with labels and axis names."""
+        self.title_name = title_name
+        self.axis_y_name = axis_y_name
+        self.axis_x_name = axis_x_name
+        self.label_relative_values = label_relative_values
+        self.label_conv_criterion = label_conv_criterion
 
+    def plot_setting_kwargs(self, **plot_setting):
+        """
+        Handle and validate keyword arguments for plot customization.
+
+        Parameters:
+        ----------
+        plot_setting : dict
+            Arbitrary keyword arguments for plot customization.
+
+        Returns:
+        -------
+        dict
+            A dictionary of standardized plot settings.
+        """
+        # Define default settings
+        default_settings = {
+        "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 14},
+        "label_size": 12,
+        "figsize": (6,6), 
+        "criterion_settings": {"linestyle":":","color":"red"},
+        "legend_loc": "upper right",
+        "fill_settings": {"color": "grey","alpha": 0.3}
+        }
+        
+        # Validate keys
+        valid_keys = default_settings.keys()
+        invalid_keys = [key for key in plot_setting if key not in valid_keys]
+        if invalid_keys:
+            raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
+    
+        # Separate out dictionary-based settings to be updated
+        dict_keys = ['fontdict_title']
+        for dict_key in dict_keys:
+            if dict_key in plot_setting:
+                # Update the existing dictionary with new settings from plot_setting
+                plot_setting[dict_key] = {**default_settings[dict_key], **plot_setting[dict_key]}
+    
+        # Update default settings with user-provided settings
+        validated_settings = {**default_settings, **plot_setting}
+        return validated_settings
+    
     def plot_convergence(self,
-                         difference_energy_values: np.ndarray,
-                         cut_off_values: np.ndarray,
+                         relative_values: np.ndarray,
+                         cutoff_values: np.ndarray,
                          conv_criterion: float,
-                         color_settings: dict = None,
-                         axhspan_settings: dict = None,
                          show_fill: bool = True,
                          y_log:bool=True,
-                         figure_size: tuple = (6.5, 5)
+                         **settings
                          ):
         """
         Plot the convergence data with relative energies vs cut-off values.
 
         Parameters:
-        difference_energy_values (np.ndarray): Relative energies for plotting.
-        cut_off_values (np.ndarray): The cut-off values for plotting.
+        relative_values (np.ndarray): Relative energies for plotting.
+        cutoff_values (np.ndarray): The cut-off values for plotting.
         conv_criterion (float): The convergence threshold.
         color_settings (dict): Optional dictionary to configure plot colors.
         axhspan_settings (dict): Optional settings for the shaded region.
@@ -50,109 +85,69 @@ class ConvergencePlot(ConvergenceTools):
         y_log (bool): Whether to use a logarithmic scale for the y-axis.
         figsize (tuple): Optional figure size (width, height) in inches.
         """
-        # Default color settings
-        default_colors = {
-            "line": "black",
-            "marker": "o",
-            "criterion_line": "red",
-            "criterion_style": ":",
-            "title_color": "black",
-        }
-        # Update defaults with user-provided settings
-        if color_settings:
-            default_colors.update(color_settings)
 
-        # Default axhspan settings
-        default_axhspan_settings = {
-            "color": "grey",
-            "alpha": 0.3
-        }
-        if axhspan_settings:
-            default_axhspan_settings.update(axhspan_settings)
+        # Handle plot settings
+        plot_settings = self.plot_setting_kwargs(**settings)
+
+        # Instance the subplot class's matplotlib
+        fig = plt.subplot(1,1,figsize=(plot_settings["figsize"]))
 
         # Find the convergence values
-        cut_off_values_new, convergence_cut_off_values = super().find_convergence_values(difference_energy_values, cut_off_values, conv_criterion)
+        cutoff_values_new, convergence_cutoff_values = super().find_convergence_values(relative_values, cutoff_values, conv_criterion)
 
-        if self.difference_energies_unit_meV: 
-            # Convert relative energies to [meV]
-            difference_energy_values = (10**3) * difference_energy_values
-            conv_criterion = (10**3) * conv_criterion
-            #self.axis_y_name = r'$|\Delta E|$ [meV/#atoms]'
-        
-        # Set the figure size, use default if None
-        plt.figure(figsize=figure_size)
-
-        # Plot data
-        if y_log:
-            plt.semilogy(
-                cut_off_values_new, 
-                difference_energy_values,
-                color=default_colors["line"], 
-                marker=default_colors["marker"], 
-                label=r'$|\Delta E|$'
-            )
+        # Plot x,y velues
+        if y_log: 
+            fig.semilogy(cutoff_values_new,relative_values,label=self.label_relative_values)
         else:
-            plt.plot(
-                cut_off_values_new, 
-                difference_energy_values,
-                color=default_colors["line"], 
-                marker=default_colors["marker"], 
-                label= r'$|\Delta$Pressure $|$'
+            fig.plot(cutoff_values_new,relative_values,label=self.label_relative_values)
+         
+        # Plot the convergence criterion line
+        fig.axhline(
+                y=conv_criterion,
+                label=self.label_conv_criterion,
+                **plot_settings['criterion_settings']
             )
-
+        
         # Conditionally display the shaded region below the convergence criterion
         if show_fill:
-            plt.axhspan(
+            fig.axhspan(
                 ymin=0,
                 ymax=conv_criterion,
-                **default_axhspan_settings
-                )   
+                **plot_settings["fill_settings"]
+                )
         
-        # Plot the convergence criterion line
-        if self.conv_criterion_unit is None:
-            plt.axhline(
-                y=conv_criterion,
-                color=default_colors["criterion_line"],
-                linestyle=default_colors["criterion_style"],
-                label=f'Criterion {conv_criterion} [meV]' if self.difference_energies_unit_meV else f'Criterion {conv_criterion} [eV]'
-            )
-                    # Print the criterion
-            print(
-                f"Convergence criterion: {conv_criterion} [meV]" 
-                if self.difference_energies_unit_meV 
-                else f"Convergence criterion: {conv_criterion} [eV]"
-                )
-        else:
-            plt.axhline(
-                y=conv_criterion,
-                color=default_colors["criterion_line"],
-                linestyle=default_colors["criterion_style"],
-                label=f'Criterion {conv_criterion} [m{self.conv_criterion_unit}]' if self.difference_energies_unit_meV else f'Criterion {conv_criterion} [{self.conv_criterion_unit}]'
-            )
-                    # Print the criterion
-            print(
-                f"Convergence criterion: {conv_criterion} [m{self.conv_criterion_unit}]" 
-                if self.difference_energies_unit_meV 
-                else f"Convergence criterion: {conv_criterion} [{self.conv_criterion_unit}]"
-                )
-
-
         # Add titles and labels
-        plt.title(
+        fig.title(
             self.title_name,
-            fontdict={
-                "family": "serif",
-                "color": default_colors["title_color"],
-                "weight": "bold",
-                "size": 14
-            }
+            fontdict=plot_settings['fontdict_title']
         )
-        plt.ylabel(self.axis_y_name)
-        plt.xlabel(self.axis_x_name)
-        plt.legend(loc='upper right')
+        fig.ylabel(self.axis_y_name)
+        fig.xlabel(self.axis_x_name)
+        fig.legend(loc=plot_settings["legend_loc"])  
 
-        # Print the convergence cut-off values
-        print(f"Convergence values: {convergence_cut_off_values}")
+        return fig 
+    
+    @staticmethod
+    def get_energy_convergence_plot(energies:np.ndarray,
+                                    cut_off_values:np.ndarray,
+                                    conv_criterion:float,
+                                    title_name: str= "Total energy vs Cutoff energy",
+                                    axis_x_name: str="Cutoff [eV]",
+                                    axis_y_name: str= r'$|\Delta E|$ [meV/#atoms]', 
+                                    label_relative_values:str = r'$|\Delta E|$',
+                                    label_conv_criterion_unit:str="meV",
+                                    show_fill:bool=True,
+                                    y_log:bool=True,
+                                    **settings
+                                    ):
+        Fig_energy = ConvergencePlot(title_name=title_name,axis_x_name=axis_x_name,axis_y_name=axis_y_name,label_conv_criterion=label_relative_values,label_relative_values=f'Criterion {conv_criterion} {label_conv_criterion_unit}')
+        
+        relative_energies = Fig_energy.create_abs_diff_values(energies)
 
-        # Display the plot
-        # plt.show()
+        conv_energy_plot = Fig_energy.plot_convergence(relative_values=relative_energies,
+                                                       cutoff_values=cut_off_values,
+                                                       conv_criterion=conv_criterion,
+                                                       show_fill=show_fill,
+                                                       y_log=y_log,
+                                                       **settings)
+        return conv_energy_plot
