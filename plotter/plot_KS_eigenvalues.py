@@ -5,6 +5,9 @@ from VaspDefAnalysis.read_vasprun.vasprun_analysis import VaspRunAnalysis
 from VaspDefAnalysis.plotter.tool_plotter import classify_eigenvalues,generate_fraction_labels_for_kpoints
 
 class PlotKohnShamEigenvalue:
+    """
+    Plot Kohn-Sham eigenvalue using output of VASP (Vienna Ab initio Simulation Package).
+    """
     def __init__(self,
                 eigenvalues_dict:dict, 
                 occupancy_dict:dict, 

@@ -1,13 +1,18 @@
 import xml.etree.ElementTree as ET
 
 class VaspRunAnalysis:
+    """
+    The VaspRunAnalysis class provides functionality to analyze VASP (Vienna Ab initio Simulation Package)
+    run data stored in a `vasprun.xml` file. This file contains comprehensive output from VASP calculations 
+    such as eigenvalues, k-points, and orbital weights. The class uses Python's xml.etree.ElementTree to 
+    parse and extract necessary data for detailed analysis of simulation results.
+    
+    Initialize the VaspAnalysis class with the path to vasprun.xml file.
+    
+    Parameters:
+    vasprun_path (str): Path to the vasprun.xml file
+    """
     def __init__(self, vasprun_path: str):
-        """
-        Initialize the VaspAnalysis class with the path to vasprun.xml file.
-        
-        Parameters:
-        vasprun_path (str): Path to the vasprun.xml file
-        """
         self.vasprun_path = vasprun_path
 
         # Transform tree and root in attributes to easier called

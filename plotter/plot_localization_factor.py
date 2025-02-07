@@ -9,7 +9,10 @@ from VaspDefAnalysis.defect.localization_factor import LocalizedStates
 from VaspDefAnalysis.plotter.tool_plotter import generate_fraction_labels_for_kpoints
 
 class PlotLocalizedStates:
-
+    """
+    Plot Kohn-Sham localization eigenvalue using output of VASP, It can handle two methods (Vienna Ab initio Simulation Package): 
+    using the ion orbital weights (IOWs) and Inverse Participation Ratio (IPR).
+    """
     def __init__(self,
                  kpoints_dict: dict, 
                  eigenvalues_dict: dict,

@@ -1,4 +1,3 @@
-
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,6 +10,15 @@ from VaspDefAnalysis.utils.utils_convergence import ConvergenceTools
 from VaspDefAnalysis.utils.tool_pool import SIUnitConverter
 
 class ConvergencePlot(ConvergenceTools):
+    """
+    The ConvergencePlot class extends the ConvergenceTools to provide functionalities 
+    for visualizing convergence tests, particularly for plotting energy convergence with respect to 
+    cutoff and K-Point density parameters. 
+
+    The class utilizes matplotlib for plotting and supports customization of the plot's appearance 
+    through various settings. Users can generate and customize plots of energy differences (relative energies) 
+    to visualize how calculated properties converge with different computational parameters.
+    """
     def __init__(self, 
                  title_name: str,
                  axis_x_name: str,
