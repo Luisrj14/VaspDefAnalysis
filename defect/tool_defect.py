@@ -3,7 +3,7 @@ from vaspwfc import vaspwfc
 import numpy as np
 
 """
-Here there are some tool for defect class
+Here there are some tools for defect class
 """
 def get_ion_orbital_total_weight_neighbors_to_defects(
         vasprun_path: str,

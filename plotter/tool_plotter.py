@@ -2,7 +2,7 @@
 from fractions import Fraction
 
 """
-Here there are some tool for plotter class
+Here there are some tools for plotter class
 """
 
 def generate_fraction_labels_for_kpoints(kpt_coords:list, 
