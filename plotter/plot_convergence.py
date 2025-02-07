@@ -160,6 +160,10 @@ class ConvergencePlot(ConvergenceTools):
             Label for the relative energies in the plot.
         label_conv_criterion_unit : str
             Unit label for the convergence criterion.
+        SI_unit: str = "eV".
+            Specifies the unit of energy, defaulting to electronvolts (eV).
+        use_SI_prefixes: str = "milli",  
+            Specifies the SI prefix to use for conversion, defaulting to milli (e.g., converting eV to meV).
         show_fill : bool
             Whether to show the fill area under the convergence line (default is True).
         y_log : bool
@@ -235,6 +239,10 @@ class ConvergencePlot(ConvergenceTools):
             Label for the relative energies in the plot.
         label_conv_criterion_unit : str
             Unit label for the convergence criterion.
+        SI_unit: str = "eV".
+            Specifies the unit of energy, defaulting to electronvolts (eV).
+        use_SI_prefixes: str = "milli",  
+            Specifies the SI prefix to use for conversion, defaulting to milli (e.g., converting eV to meV).
         show_fill : bool
             Whether to show the fill area under the convergence line (default is True).
         y_log : bool
