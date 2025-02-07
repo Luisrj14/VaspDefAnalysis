@@ -1,6 +1,9 @@
 import numpy as np
 from ase import Atoms
 
+"""
+Here there are some random tools
+"""
 def find_relative_distance_from_poscar_with_respect_to_position(structure: Atoms, position: np.ndarray) -> np.ndarray:
     """
     Finds distances of all atoms in the supercell with respect to a given position.
