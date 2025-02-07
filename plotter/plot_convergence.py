@@ -8,6 +8,7 @@ import os
 #sys.path.append(os.path.abspath('VaspDefAnalysis/convergence'))
 
 from VaspDefAnalysis.utils.utils_convergence import ConvergenceTools
+from VaspDefAnalysis.utils.tool_pool import SIUnitConverter
 
 class ConvergencePlot(ConvergenceTools):
     def __init__(self, 
@@ -129,11 +130,12 @@ class ConvergencePlot(ConvergenceTools):
     def get_cutoff_convergence_plot(energies: np.ndarray,
                                     cutoff_values: np.ndarray,
                                     conv_criterion: float,
-                                    title_name: str = "Total energy vs Cutoff energy",
-                                    axis_x_name: str = "Cutoff [eV]",
-                                    axis_y_name: str = r'$|\,\Delta E \,| $ [meV]', #r'$|\Delta E|$ [meV/#atoms]', 
+                                    title_name: str = "Total energy vs Energy cutoff",
+                                    axis_x_name: str = "Energy cutoff [eV]",
+                                    axis_y_name: str = r'$|\,\Delta E \,| $', #r'$|\Delta E|$ [meV/#atoms]', 
                                     label_relative_values: str = r'$|\,\Delta E \,| $',
-                                    label_conv_criterion_unit: str = "meV",
+                                    SI_unit: str = "eV",
+                                    use_SI_prefixes:str = "milli",
                                     show_fill: bool = True,
                                     y_log: bool = True,
                                     **settings):
@@ -170,21 +172,28 @@ class ConvergencePlot(ConvergenceTools):
         fig : matplotlib.figure.Figure
             The figure object created.
         """
+
+        conver_unit_1 = SIUnitConverter(value=energies,unit=SI_unit)
+        new_energy_values, new_unit = conver_unit_1.convert(prefix=use_SI_prefixes)
+
+        conver_unit_2 = SIUnitConverter(value=conv_criterion,unit=SI_unit)
+        new_conv_criterion,new_unit_conv_criterion = conver_unit_2.convert(prefix=use_SI_prefixes)
+
         
         plot = ConvergencePlot(
             title_name=title_name,
             axis_x_name=axis_x_name,
-            axis_y_name=axis_y_name,
-            label_relative_values=label_relative_values,
-            label_conv_criterion=f'Criterion {conv_criterion} [{label_conv_criterion_unit}]'
+            axis_y_name=f'{axis_y_name} [{new_unit}]',
+            label_relative_values= f'{label_relative_values}',
+            label_conv_criterion=f'Criterion {new_conv_criterion} [{new_unit_conv_criterion}]'
         )
         
-        relative_energies = plot.create_abs_diff_values(energies)
+        relative_energies = plot.create_abs_diff_values(new_energy_values)
 
         fig = plot.plot_convergence(
                                     relative_values=relative_energies,
                                     cutoff_values=cutoff_values,
-                                    conv_criterion=conv_criterion,
+                                    conv_criterion=new_conv_criterion,
                                     show_fill=show_fill,
                                     y_log=y_log,
                                     **settings
@@ -196,11 +205,12 @@ class ConvergencePlot(ConvergenceTools):
     def get_kpoint_convergence_plot(energies: np.ndarray,
                                     cutoff_values: np.ndarray,
                                     conv_criterion: float,
-                                    title_name: str = "Total energy vs Cutoff energy",
-                                    axis_x_name: str = "K-Points",
-                                    axis_y_name: str = r'$|\Delta E|$ [meV/#atoms]', 
-                                    label_relative_values: str = r'$|\Delta E|$',
-                                    label_conv_criterion_unit: str = "meV",
+                                    title_name: str = "Total energy vs K-Points density",
+                                    axis_x_name: str = "K-Points density",
+                                    axis_y_name: str = r'$|\,\Delta E \,| $', #r'$|\Delta E|$ [meV/#atoms]', 
+                                    label_relative_values: str = r'$|\,\Delta E \,| $',
+                                    SI_unit: str = "eV",
+                                    use_SI_prefixes:str = "milli",
                                     show_fill: bool = True,
                                     y_log: bool = True,
                                     **settings):
@@ -237,21 +247,28 @@ class ConvergencePlot(ConvergenceTools):
         fig : matplotlib.figure.Figure
             The figure object created.
         """
+
+        conver_unit_1 = SIUnitConverter(value=energies,unit=SI_unit)
+        new_energy_values, new_unit = conver_unit_1.convert(prefix=use_SI_prefixes)
+
+        conver_unit_2 = SIUnitConverter(value=conv_criterion,unit=SI_unit)
+        new_conv_criterion,new_unit_conv_criterion = conver_unit_2.convert(prefix=use_SI_prefixes)
+
         
         plot = ConvergencePlot(
             title_name=title_name,
             axis_x_name=axis_x_name,
-            axis_y_name=axis_y_name,
-            label_relative_values=label_relative_values,
-            label_conv_criterion=f'Criterion {conv_criterion} [{label_conv_criterion_unit}]'
+            axis_y_name=f'{axis_y_name} [{new_unit}]',
+            label_relative_values=f'{label_relative_values}',
+            label_conv_criterion=f'Criterion {new_conv_criterion} [{new_unit_conv_criterion}]'
         )
         
-        relative_energies = plot.create_abs_diff_values(energies)
+        relative_energies = plot.create_abs_diff_values(new_energy_values)
 
         fig = plot.plot_convergence(
                                     relative_values=relative_energies,
                                     cutoff_values=cutoff_values,
-                                    conv_criterion=conv_criterion,
+                                    conv_criterion=new_conv_criterion,
                                     show_fill=show_fill,
                                     y_log=y_log,
                                     **settings

@@ -154,11 +154,39 @@ def find_indexs_positions_distances_inside_raduis(structure: Atoms,
 
     return index_inside_radius,distances_inside_radius,neighbors_inside_radius
 
-    
+class SIUnitConverter:
+    """A class to provide SI multiples and submultiples for a given value and unit."""
 
+    def __init__(self, value, unit):
+        self.value = value
+        self.unit = unit
 
+        # SI prefixes with their corresponding factors and symbols
+        self.prefixes = {
+            "yotta": {"value": 1e24, "symbol": "Y"},   # Y
+            "zetta": {"value": 1e21, "symbol": "Z"},   # Z
+            "exa": {"value": 1e18, "symbol": "E"},     # E
+            "peta": {"value": 1e15, "symbol": "P"},    # P
+            "tera": {"value": 1e12, "symbol": "T"},    # T
+            "giga": {"value": 1e9, "symbol": "G"},     # G
+            "mega": {"value": 1e6, "symbol": "M"},     # M
+            "kilo": {"value": 1e3, "symbol": "k"},     # k
 
+            "milli": {"value": 1e-3, "symbol": "m"},   # m
+            "micro": {"value": 1e-6, "symbol": "µ"},   # µ
+            "nano": {"value": 1e-9, "symbol": "n"},    # n
+            "pico": {"value": 1e-12, "symbol": "p"},   # p
+            "femto": {"value": 1e-15, "symbol": "f"},  # f
+            "atto": {"value": 1e-18, "symbol": "a"},   # a
+            "zepto": {"value": 1e-21, "symbol": "z"},  # z
+            "yocto": {"value": 1e-24, "symbol": "y"}   # y
+        }
 
-        
-
-    
+    def convert(self, prefix):
+        """Convert the value to a specified SI prefix."""
+        if prefix in self.prefixes:
+            converted_value = self.value / self.prefixes[prefix]["value"]
+            symbol = self.prefixes[prefix]["symbol"]
+            return converted_value,f"{symbol}{self.unit}"
+        else:
+            return "Invalid SI prefix." 
