@@ -48,7 +48,7 @@ class ConvergencePlot(ConvergenceTools):
         """
         default_settings = {
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
-            "label_size": 12,
+            "label_size": 10,
             "figsize": (6, 5),
             "curve_settings":{"color":"black","marker": ">"},
             "criterion_settings": {"linestyle": ":", "color": "red"},
@@ -62,7 +62,7 @@ class ConvergencePlot(ConvergenceTools):
             raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
     
         # Update settings with user-provided values
-        dict_keys = ['fontdict_title']
+        dict_keys = ['fontdict_title','curve_settings','criterion_settings','fill_settings']
         for dict_key in dict_keys:
             if dict_key in plot_setting:
                 plot_setting[dict_key] = {**default_settings[dict_key], **plot_setting[dict_key]}
@@ -130,7 +130,7 @@ class ConvergencePlot(ConvergenceTools):
         ax.set_title(self.title_name, fontdict=plot_settings['fontdict_title'])
         ax.set_ylabel(self.axis_y_name)
         ax.set_xlabel(self.axis_x_name)
-        ax.legend(loc=plot_settings["legend_loc"])
+        ax.legend(loc=plot_settings["legend_loc"],fontsize = plot_settings['label_size'])
 
         return fig
     
@@ -289,5 +289,161 @@ class ConvergencePlot(ConvergenceTools):
                                     y_log=y_log,
                                     **settings
                                     )
+        
+        return fig
+    
+    @staticmethod
+    def get_y_vs_cutoff_convergence_plot(
+                                    energies: np.ndarray,
+                                    cutoff_values: np.ndarray,
+                                    title_name: str = "Relative energy vs Energy cutoff ",
+                                    axis_x_name: str = "K-Points density",
+                                    axis_y_name: str = "Relative energies",
+                                    label_relative_values:str=None,
+                                    SI_unit: str = "eV",
+                                    use_SI_prefixes:str = "milli",
+                                    y_log: bool = False,
+                                    **settings):
+        """
+        Create and return a convergence plot of energies against cutoff values.
+
+        Parameters:
+        ----------
+        energies : np.ndarray
+            Array of energy values to analyze.
+        cutoff_values : np.ndarray
+            Array of cutoff values corresponding to energies.
+        conv_criterion : float
+            Convergence threshold value.
+        title_name : str
+            Title for the plot.
+        axis_x_name : str
+            Label for the x-axis.
+        axis_y_name : str
+            Label for the y-axis.
+        label_relative_values : str
+            Label for the relative energies in the plot.
+        label_conv_criterion_unit : str
+            Unit label for the convergence criterion.
+        SI_unit: str = "eV".
+            Specifies the unit of energy, defaulting to electronvolts (eV).
+        use_SI_prefixes: str = "milli",  
+            Specifies the SI prefix to use for conversion, defaulting to milli (e.g., converting eV to meV).
+        show_fill : bool
+            Whether to show the fill area under the convergence line (default is True).
+        y_log : bool
+            Whether to use a logarithmic scale for the y-axis (default is True).
+        settings : dict
+            Additional plot settings.
+        
+        Returns:
+        -------
+        fig : matplotlib.figure.Figure
+            The figure object created.
+        """
+        default_settings = {
+            "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
+            "label_size": 10,
+            "figsize": (6, 5),
+            "curve_settings":{"color":"black","marker": ">"},
+            "criterion_settings": {"linestyle": ":", "color": "red"},
+            "legend_loc": "upper right",
+        }
+        
+        plot_settings = {**default_settings,**settings}
+
+        fig, ax = plt.subplots(figsize=plot_settings["figsize"])
+
+        conver_unit = SIUnitConverter(value=energies,unit=SI_unit)
+        new_energy_values, new_unit = conver_unit.convert(prefix=use_SI_prefixes)
+
+        if y_log: 
+            ax.semilogy(cutoff_values,new_energy_values,label=label_relative_values,**plot_settings['curve_settings'])
+        else:
+            ax.plot(cutoff_values,new_energy_values, label=label_relative_values,**plot_settings['curve_settings'])
+        
+        ax.set_title(title_name, fontdict=plot_settings['fontdict_title'])
+        ax.set_ylabel(f'{axis_y_name} [{new_unit}]')
+        ax.set_xlabel(axis_x_name)
+        if label_relative_values is not None:
+            ax.legend(fontsize = plot_settings['label_size'],loc=plot_settings["legend_loc"])
+        
+        return fig
+    
+    @staticmethod
+    def get_y_vs_kpoint_convergence_plot(
+                                    energies: np.ndarray,
+                                    cutoff_values: np.ndarray,
+                                    title_name: str = "Relative energy vs K-Points density",
+                                    axis_x_name: str = "K-Points density",
+                                    axis_y_name: str = "Relative energies",
+                                    label_relative_values:str=None,
+                                    SI_unit: str = "eV",
+                                    use_SI_prefixes:str = "milli",
+                                    y_log: bool = False,
+                                    **settings):
+        """
+        Create and return a convergence plot of energies against cutoff values.
+
+        Parameters:
+        ----------
+        energies : np.ndarray
+            Array of energy values to analyze.
+        cutoff_values : np.ndarray
+            Array of cutoff values corresponding to energies.
+        conv_criterion : float
+            Convergence threshold value.
+        title_name : str
+            Title for the plot.
+        axis_x_name : str
+            Label for the x-axis.
+        axis_y_name : str
+            Label for the y-axis.
+        label_relative_values : str
+            Label for the relative energies in the plot.
+        label_conv_criterion_unit : str
+            Unit label for the convergence criterion.
+        SI_unit: str = "eV".
+            Specifies the unit of energy, defaulting to electronvolts (eV).
+        use_SI_prefixes: str = "milli",  
+            Specifies the SI prefix to use for conversion, defaulting to milli (e.g., converting eV to meV).
+        show_fill : bool
+            Whether to show the fill area under the convergence line (default is True).
+        y_log : bool
+            Whether to use a logarithmic scale for the y-axis (default is True).
+        settings : dict
+            Additional plot settings.
+        
+        Returns:
+        -------
+        fig : matplotlib.figure.Figure
+            The figure object created.
+        """
+        default_settings = {
+            "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
+            "label_size": 10,
+            "figsize": (6, 5),
+            "curve_settings":{"color":"black","marker": ">"},
+            "criterion_settings": {"linestyle": ":", "color": "red"},
+            "legend_loc": "upper right",
+        }
+        
+        plot_settings = {**default_settings,**settings}
+
+        fig, ax = plt.subplots(figsize=plot_settings["figsize"])
+
+        conver_unit = SIUnitConverter(value=energies,unit=SI_unit)
+        new_energy_values, new_unit = conver_unit.convert(prefix=use_SI_prefixes)
+
+        if y_log: 
+            ax.semilogy(cutoff_values,new_energy_values,label=label_relative_values,**plot_settings['curve_settings'])
+        else:
+            ax.plot(cutoff_values,new_energy_values, label=label_relative_values,**plot_settings['curve_settings'])
+        
+        ax.set_title(title_name, fontdict=plot_settings['fontdict_title'])
+        ax.set_ylabel(f'{axis_y_name} [{new_unit}]')
+        ax.set_xlabel(axis_x_name)
+        if label_relative_values is not None:
+            ax.legend(fontsize = plot_settings['label_size'],loc=plot_settings["legend_loc"])
         
         return fig
