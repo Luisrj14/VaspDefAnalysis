@@ -122,7 +122,7 @@ class ConvergencePlot(ConvergenceTools):
         
         if show_fill:
             ax.axhspan(
-                ymin=0,
+                ymin=0.0,
                 ymax=conv_criterion,
                 **plot_settings["fill_settings"]
             )
