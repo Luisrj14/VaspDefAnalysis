@@ -297,7 +297,7 @@ class ConvergencePlot(ConvergenceTools):
                                     energies: np.ndarray,
                                     cutoff_values: np.ndarray,
                                     title_name: str = "Relative energy vs Energy cutoff ",
-                                    axis_x_name: str = "K-Points density",
+                                    axis_x_name: str = "Energy cutoff [eV]",
                                     axis_y_name: str = "Relative energies",
                                     label_relative_values:str=None,
                                     SI_unit: str = "eV",
