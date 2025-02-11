@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from VaspDefAnalysis.read_vasprun.vasprun_analysis import VaspRunAnalysis
+from VaspDefAnalysis.read_vasp.vasprun_analysis import VaspRunAnalysis
 from VaspDefAnalysis.plotter.tool_plotter import classify_eigenvalues,generate_fraction_labels_for_kpoints
 
 class PlotKohnShamEigenvalue:
@@ -351,8 +351,8 @@ class PlotKohnShamEigenvalue:
                     )   
         
         # Adjust spacing between subplots for better readability
-        plt.tight_layout()  
-        plt.close()
+        fig.tight_layout()  
+        #plt.close()
         return fig
 
 

@@ -49,6 +49,7 @@ class ConvergencePlot(ConvergenceTools):
         default_settings = {
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
             "label_size": 10,
+            "x_y_label_size": 12,
             "figsize": (6, 5),
             "curve_settings":{"color":"black","marker": ">"},
             "criterion_settings": {"linestyle": ":", "color": "red"},
@@ -128,9 +129,12 @@ class ConvergencePlot(ConvergenceTools):
             )
         
         ax.set_title(self.title_name, fontdict=plot_settings['fontdict_title'])
-        ax.set_ylabel(self.axis_y_name)
-        ax.set_xlabel(self.axis_x_name)
+        ax.set_ylabel(self.axis_y_name,size=plot_settings["x_y_label_size"])
+        ax.set_xlabel(self.axis_x_name,size=plot_settings["x_y_label_size"])
         ax.legend(loc=plot_settings["legend_loc"],fontsize = plot_settings['label_size'])
+
+        # Adjust layout to prevent clipping of labels
+        fig.tight_layout()
 
         return fig
     
@@ -343,7 +347,7 @@ class ConvergencePlot(ConvergenceTools):
         """
         default_settings = {
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
-            "label_size": 10,
+             "x_y_label_size": 12,
             "figsize": (6, 5),
             "curve_settings":{"color":"black","marker": ">"},
             "criterion_settings": {"linestyle": ":", "color": "red"},
@@ -363,10 +367,13 @@ class ConvergencePlot(ConvergenceTools):
             ax.plot(cutoff_values,new_energy_values, label=label_relative_values,**plot_settings['curve_settings'])
         
         ax.set_title(title_name, fontdict=plot_settings['fontdict_title'])
-        ax.set_ylabel(f'{axis_y_name} [{new_unit}]')
-        ax.set_xlabel(axis_x_name)
+        ax.set_ylabel(f'{axis_y_name} [{new_unit}]',size=plot_settings["x_y_label_size"]) 
+        ax.set_xlabel(axis_x_name,size=plot_settings["x_y_label_size"])
         if label_relative_values is not None:
             ax.legend(fontsize = plot_settings['label_size'],loc=plot_settings["legend_loc"])
+        
+        # Adjust layout to prevent clipping of labels
+        fig.tight_layout()
         
         return fig
     
@@ -421,7 +428,7 @@ class ConvergencePlot(ConvergenceTools):
         """
         default_settings = {
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
-            "label_size": 10,
+            "x_y_label_size": 12,
             "figsize": (6, 5),
             "curve_settings":{"color":"black","marker": ">"},
             "criterion_settings": {"linestyle": ":", "color": "red"},
@@ -441,9 +448,12 @@ class ConvergencePlot(ConvergenceTools):
             ax.plot(cutoff_values,new_energy_values, label=label_relative_values,**plot_settings['curve_settings'])
         
         ax.set_title(title_name, fontdict=plot_settings['fontdict_title'])
-        ax.set_ylabel(f'{axis_y_name} [{new_unit}]')
-        ax.set_xlabel(axis_x_name)
+        ax.set_ylabel(f'{axis_y_name} [{new_unit}]',size=plot_settings["x_y_label_size"])
+        ax.set_xlabel(axis_x_name,size=plot_settings["x_y_label_size"])
         if label_relative_values is not None:
             ax.legend(fontsize = plot_settings['label_size'],loc=plot_settings["legend_loc"])
         
+        # Adjust layout to prevent clipping of labels
+        fig.tight_layout()
+
         return fig

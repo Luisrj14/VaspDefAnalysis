@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from VaspDefAnalysis.defect.defect_analisys import DefectAnalisys
-from VaspDefAnalysis.read_vasprun.vasprun_analysis import VaspRunAnalysis
+from VaspDefAnalysis.read_vasp.vasprun_analysis import VaspRunAnalysis
 #from VaspDefAnalysis.defect.localization_factor import get_ion_orbital_total_weight_neighbors_to_defects,get_ipr_values
 from VaspDefAnalysis.defect.localization_factor import LocalizedStates
 from VaspDefAnalysis.plotter.tool_plotter import generate_fraction_labels_for_kpoints
@@ -207,8 +207,8 @@ class PlotLocalizedStates:
             spin_idx += 1
 
         # Adjust subplot spacing and return the figure
-        plt.tight_layout() 
-        plt.close()
+        fig.tight_layout() 
+        #plt.close()
         return fig
     
     @staticmethod
