@@ -174,7 +174,7 @@ class SIUnitConverter:
             "giga": {"value": 1e9, "symbol": "G"},     # G
             "mega": {"value": 1e6, "symbol": "M"},     # M
             "kilo": {"value": 1e3, "symbol": "k"},     # k
-
+            
             "milli": {"value": 1e-3, "symbol": "m"},   # m
             "micro": {"value": 1e-6, "symbol": "µ"},   # µ
             "nano": {"value": 1e-9, "symbol": "n"},    # n
@@ -187,9 +187,13 @@ class SIUnitConverter:
 
     def convert(self, prefix):
         """Convert the value to a specified SI prefix."""
-        if prefix in self.prefixes:
-            converted_value = self.value / self.prefixes[prefix]["value"]
-            symbol = self.prefixes[prefix]["symbol"]
-            return converted_value,f"{symbol}{self.unit}"
+
+        if prefix == None:
+            return self.value,f'{self.unit}'
         else:
-            return "Invalid SI prefix." 
+            if prefix in self.prefixes:
+                converted_value = self.value / self.prefixes[prefix]["value"]
+                symbol = self.prefixes[prefix]["symbol"]
+                return converted_value,f"{symbol}{self.unit}"
+            else:
+                return "Invalid SI prefix." 
