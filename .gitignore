@@ -8,3 +8,6 @@ venv/
 
 # Ignore system files
 .DS_Store
+
+# Ignore Jupyter notebooks
+*.ipynb
