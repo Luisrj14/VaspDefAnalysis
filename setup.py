@@ -11,16 +11,15 @@ setup(
     long_description=long_description,                                     # Read from README file
     long_description_content_type="text/markdown",                         # Format of README (markdown)
     author="Luis Jimenez A",                                               # Author of the project
-    #author_email="your.email@example.com",                                 # Author email
+    #author_email="your.email@example.com",                                # Author email
     url="https://github.com/luisrj11/VaspDefAnalysis",                     # URL of your project (if hosted on GitHub)
     #packages=find_packages(exclude=["bin"]),                              
     packages=find_packages(),                                              # Automatically find all Python packages                             
-    install_requires=[  # Required dependencies
-        "numpy",  # Example: Adding numpy as a dependency
-        "matplotlib",  # Adding matplotlib as a dependency
-        "git+https://github.com/QijingZheng/VaspBandUnfolding",  # Adding GitHub repository as dependency
-        "ase",  # Adding ASE package for atomic simulations
-    ],
+    #install_requires=["numpy",  # Example: Adding numpy as a dependency
+    #                  "matplotlib",  # Adding matplotlib as a dependency
+    #                  "VaspBandUnfolding @ git+https://github.com/QijingZheng/VaspBandUnfolding.git", # Adding GitHub repository as dependency
+    #                  "ase",  # Adding ASE package for atomic simulations
+    #],
     classifiers=[  # Classifiers that help categorize the package
         "Programming Language :: Python :: 3",  # This works with Python 3
         "Programming Language :: Python :: 3.10",  # Specifically Python 3.10
