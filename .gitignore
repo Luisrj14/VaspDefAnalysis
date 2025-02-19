@@ -11,3 +11,7 @@ venv/
 
 # Ignore Jupyter notebooks
 *.ipynb
+
+# Ignore foder creat by  pip editable mode (pip install -e ): VaspDefAnalisys.egg-info/
+VaspDefAnalisys.egg-info/
+
