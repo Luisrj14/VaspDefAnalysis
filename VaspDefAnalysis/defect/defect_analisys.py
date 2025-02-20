@@ -152,7 +152,7 @@ class DefectAnalisys:
             # Add the susitutional or interestitial indexes of the defect.
             index_defect = 0 
             for pos in self.defect_structure.get_positions():
-                if np.linalg.norm(pos - def_pos) < self.tolerance:
+                if np.linalg.norm(pos - def_pos) <= self.tolerance:
                     # Append the indices of neighbors to the list
                     all_neighbor_indices.append([index_defect])
                     
