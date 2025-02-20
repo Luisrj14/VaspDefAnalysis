@@ -31,8 +31,8 @@ class DefectAnalisys:
         add_neighbors_up : int, optional
             The number of additional neighbors to consider (default is 1).
         """
-        self.perfect_structure = read(perfect_structure_file, format='vasp')
-        self.defect_structure = read(defect_structure_file, format='vasp')
+        self.perfect_structure = read(perfect_structure_file, format='vasp') if isinstance(perfect_structure_file, str) else perfect_structure_file
+        self.defect_structure = read(defect_structure_file, format='vasp')  if isinstance(defect_structure_file, str) else defect_structure_file
         self.tolerance = tolerance
         self.add_neighbors_up = add_neighbors_up
 

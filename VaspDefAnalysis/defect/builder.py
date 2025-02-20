@@ -56,10 +56,13 @@ class Supercell:
         pass
 
 class MakeSimpleDefect:
+    
+    "Generate simples defect"
+
     def __init__(self, structure: str):
         """Initialize with a structure file (e.g., POSCAR, CIF)."""
         self.structure = structure
-        self.atoms = read(structure)  # Read the structure using ASE
+        self.atoms = io.read(structure) if isinstance(structure, str) else structure # Read the structure using ASE
 
     def make_vacancy(self, index: int) -> Atoms:
         """
@@ -75,6 +78,7 @@ class MakeSimpleDefect:
         Atoms object with a vacancy.
         """
         defect_structure = self.atoms.copy()
+        print(defect_structure)
         del defect_structure[index]
         return defect_structure
 
@@ -118,6 +122,11 @@ class MakeSimpleDefect:
 
 
 class MakeComplexDefect(MakeSimpleDefect):
+    
+    "Generate complex defect"
+
+    def __init__(self, structure):
+        super().__init__(structure)
     def make_divacancy(self, indices: list) -> Atoms:
         """
         Create a divacancy by removing two atoms at specified indices.
@@ -218,3 +227,7 @@ class MakeComplexDefect(MakeSimpleDefect):
         del defect_structure[vacancy_index]  # Delete the atom at vacancy_index
         
         return defect_structure  # Return the modified defect structure
+
+class Makedefect(MakeComplexDefect):
+    def __init__(self, structure):
+        super().__init__(structure)

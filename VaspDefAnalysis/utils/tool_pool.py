@@ -197,3 +197,31 @@ class SIUnitConverter:
                 return converted_value,f"{symbol}{self.unit}"
             else:
                 return "Invalid SI prefix." 
+
+def get_index_and_position_of_most_center_atom(structure: Atoms) -> tuple[int, np.ndarray]:
+    """
+    Find the index and position of the atom closest to the centroid of the structure.
+
+    Parameters:
+    ----------
+    structure : Atoms
+        An ASE Atoms object representing the atomic structure.
+
+    Returns:
+    -------
+    tuple[int, np.ndarray]
+        The index and position (numpy array) of the atom closest to the centroid.
+    """
+    # Get atomic positions
+    positions = structure.get_scaled_positions()
+    
+    # Compute centroid (geometric center)
+    centroid = np.mean(positions, axis=0)
+    
+    # Compute distances from centroid
+    distances = np.linalg.norm(positions - centroid, axis=1)
+
+    # Find the index of the closest atom
+    index = np.argmin(distances)
+
+    return index, positions[index]
