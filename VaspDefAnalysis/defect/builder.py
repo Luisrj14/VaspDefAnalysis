@@ -55,7 +55,7 @@ class Supercell:
     def get_squart_shape_supercell(structure):
         pass
 
-class MakeSimpleDefect:
+class Makedefect:
     
     "Generate simples defect"
 
@@ -119,14 +119,7 @@ class MakeSimpleDefect:
         defect_structure = self.atoms.copy()
         defect_structure[index].symbol = new_element
         return defect_structure
-
-
-class MakeComplexDefect(MakeSimpleDefect):
     
-    "Generate complex defect"
-
-    def __init__(self, structure):
-        super().__init__(structure)
     def make_divacancy(self, indices: list) -> Atoms:
         """
         Create a divacancy by removing two atoms at specified indices.
@@ -173,7 +166,7 @@ class MakeComplexDefect(MakeSimpleDefect):
 
         return defect_structure
 
-    def make_double_substitutional(self, indices: list, new_element: str) -> Atoms:
+    def make_dimero(self, indices: list, new_element: str) -> Atoms:
         """
         Create a double substitutional defect (like a dimer).
         
@@ -227,7 +220,3 @@ class MakeComplexDefect(MakeSimpleDefect):
         del defect_structure[vacancy_index]  # Delete the atom at vacancy_index
         
         return defect_structure  # Return the modified defect structure
-
-class Makedefect(MakeComplexDefect):
-    def __init__(self, structure):
-        super().__init__(structure)

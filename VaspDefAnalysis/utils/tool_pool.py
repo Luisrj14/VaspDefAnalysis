@@ -84,7 +84,7 @@ def find_indexs_positions_distances_to_neighbors(structure: Atoms,
     for i in range(len(distances_sorted)-1):
         
         # Check if the next distance is sufficiently different from the current one
-        if abs(distances_sorted[i+1] - distances_sorted[i]) > tolerance:
+        if abs(distances_sorted[i+1] - distances_sorted[i]) >= tolerance:
             neighbors_distances.append(distances_sorted[i+1])
     
     index_neighbors = []  # Store indices of neighbors
@@ -94,7 +94,7 @@ def find_indexs_positions_distances_to_neighbors(structure: Atoms,
     for add_up in range(add_neighbors_up):
         index = 0
         for dis in distances:
-            if abs(dis - neighbors_distances[add_up]) < tolerance:
+            if abs(dis - neighbors_distances[add_up]) <= tolerance:
                 index_neighbors.append(index)
                 distance_neighbors.append(dis)
 
@@ -224,4 +224,4 @@ def get_index_and_position_of_most_center_atom(structure: Atoms) -> tuple[int, n
     # Find the index of the closest atom
     index = np.argmin(distances)
 
-    return index, positions[index]
+    return index, structure.get_positions()[index],structure.get_chemical_symbols()[index]
