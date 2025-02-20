@@ -11,7 +11,7 @@ class Supercell:
         pass
     
     @staticmethod
-    def io_read(structure):
+    def io_read(structure:str):
         """
         Read the structure data from a given source.
 
