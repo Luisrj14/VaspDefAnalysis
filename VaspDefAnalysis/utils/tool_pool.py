@@ -106,15 +106,15 @@ def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms,
         # Get the chemical symbols of the neighbors
         chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_neighbors]
     
-    neighbors_imformation = {"index":index_neighbors,"distances":distance_neighbors,"posiitions":neighbors_posiitions,"symbols":chemical_symbols}
+    neighbors_imformation = {"indexs":index_neighbors,"distances":distance_neighbors,"positions":neighbors_posiitions,"symbols":chemical_symbols}
     return neighbors_imformation
 
 
-def find_indexs_positions_distances_inside_raduis(structure: Atoms,
-                                                  radius_centered_in_position: np.ndarray,
-                                                  radius:float
-                                                  ):
-
+def find_indexs_positions_distances__symbols_inside_raduis(structure: Atoms,
+                                                           radius_centered_in_position: np.ndarray,
+                                                           radius:float
+                                                           ):
+           
     """
     Finds all atoms within a given radius from a specified position.
 
@@ -162,7 +162,7 @@ def find_indexs_positions_distances_inside_raduis(structure: Atoms,
     # Get the chemical symbols of the neighbors
     chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_inside_radius]
     
-    neighbors_imformation = {"index":index_inside_radius,"distances":distances_inside_radius,"posiitions":neighbors_inside_radius,"symbols":chemical_symbols}
+    neighbors_imformation = {"indexs":index_inside_radius,"distances":distances_inside_radius,"posiitions":neighbors_inside_radius,"symbols":chemical_symbols}
     return neighbors_imformation
 
 class SIUnitConverter:
@@ -206,7 +206,7 @@ class SIUnitConverter:
             else:
                 return "Invalid SI prefix." 
 
-def get_index_and_position_of_most_center_atom(structure: Atoms) -> tuple[int, np.ndarray]:
+def fin_index_position_symbol_of_most_center_atom(structure: Atoms) -> tuple[int, np.ndarray]:
     """
     Find the index and position of the atom closest to the centroid of the structure.
 
@@ -232,4 +232,6 @@ def get_index_and_position_of_most_center_atom(structure: Atoms) -> tuple[int, n
     # Find the index of the closest atom
     index = np.argmin(distances)
 
-    return index, structure.get_positions()[index],structure.get_chemical_symbols()[index]
+    # Central atom infomation
+    certer_atom_infoamtion = {"index":index, "position":structure.get_positions()[index],"symbol":structure.get_chemical_symbols()[index]}
+    return certer_atom_infoamtion

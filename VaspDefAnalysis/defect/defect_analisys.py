@@ -147,7 +147,7 @@ class DefectAnalisys:
                 neighbors_to_position=def_pos,          # The current defect position
                 tolerance=self.tolerance,               # Tolerance for distance calculations
                 add_neighbors_up=self.add_neighbors_up  # Add neighbors
-            )["index"]
+            )["indexs"]
 
             # Add the susitutional or interestitial indexes of the defect.
             index_defect = 0 
