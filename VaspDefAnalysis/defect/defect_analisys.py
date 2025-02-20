@@ -3,7 +3,7 @@ import numpy as np
 from ase import Atoms
 
 #from tools_packages.utils.tool_pool import find_relative_distance_from_poscar_with_respect_to_position
-from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances_to_neighbors
+from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances_symbols_to_neighbors
 
 class DefectAnalisys:
     """
@@ -142,12 +142,12 @@ class DefectAnalisys:
         # Loop through each defect position
         for def_pos in defect_positions:
             # Get indices, positions, and distances of the neighbors to the current defect position
-            neighbor_indices, neighbor_positions, neighbor_distances = find_indexs_positions_distances_to_neighbors(
+            neighbor_indices = find_indexs_positions_distances_symbols_to_neighbors(
                 structure=self.defect_structure,        # The defect structure
                 neighbors_to_position=def_pos,          # The current defect position
                 tolerance=self.tolerance,               # Tolerance for distance calculations
                 add_neighbors_up=self.add_neighbors_up  # Add neighbors
-            )
+            )["index"]
 
             # Add the susitutional or interestitial indexes of the defect.
             index_defect = 0 

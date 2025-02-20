@@ -37,11 +37,11 @@ def find_relative_distance_from_poscar_with_respect_to_position(structure: Atoms
 
     return distances    
 
-def find_indexs_positions_distances_to_neighbors(structure: Atoms, 
-                                                neighbors_to_position: np.ndarray, 
-                                                tolerance:float=1e-1,
-                                                add_neighbors_up:int = 1
-                                                ):
+def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms, 
+                                                        neighbors_to_position: np.ndarray, 
+                                                        tolerance:float=1e-1,
+                                                        add_neighbors_up:int = 1
+                                                        ):
     """
     Finds the neighbors of a defect site based on the minimum non-zero distance.
 
@@ -103,7 +103,11 @@ def find_indexs_positions_distances_to_neighbors(structure: Atoms,
         # Get the positions of the neighbors from the structure using the identified indices
         neighbors_posiitions = [structure.get_positions()[i] for i in index_neighbors]
 
-    return index_neighbors,distance_neighbors,neighbors_posiitions
+        # Get the chemical symbols of the neighbors
+        chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_neighbors]
+    
+    neighbors_imformation = {"index":index_neighbors,"distances":distance_neighbors,"posiitions":neighbors_posiitions,"symbols":chemical_symbols}
+    return neighbors_imformation
 
 
 def find_indexs_positions_distances_inside_raduis(structure: Atoms,
@@ -155,7 +159,11 @@ def find_indexs_positions_distances_inside_raduis(structure: Atoms,
     # Get the positions of the neighbors from the structure using the identified indices
     neighbors_inside_radius = [structure.get_positions()[i] for i in index_inside_radius]
 
-    return index_inside_radius,distances_inside_radius,neighbors_inside_radius
+    # Get the chemical symbols of the neighbors
+    chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_inside_radius]
+    
+    neighbors_imformation = {"index":index_inside_radius,"distances":distances_inside_radius,"posiitions":neighbors_inside_radius,"symbols":chemical_symbols}
+    return neighbors_imformation
 
 class SIUnitConverter:
     """A class to provide SI multiples and submultiples for a given value and unit."""
