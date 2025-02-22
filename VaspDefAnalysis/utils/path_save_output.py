@@ -25,7 +25,7 @@ class SaveOutput:
         else:
             raise TypeError(f"'{directory_name_save_output}' must be a string.")
     
-    def figure_path(self,Figure_name: str=None,dir_name: str=None) -> str:
+    def figure_path(self,figure_name: str=None,dir_name: str=None) -> str:
         """
         Generates the full path to save the figure, creates necessary directories if not already present.
         """
@@ -41,11 +41,11 @@ class SaveOutput:
         # Create figure directory if it doesn't exist
         os.makedirs(figure_dir, exist_ok=True)
 
-        # Ensure the output Figure_name is a string 
-        if isinstance(Figure_name, str):
-            Figure_path = os.path.join(figure_dir, Figure_name)
+        # Ensure the output figure_name is a string 
+        if isinstance(figure_name, str):
+            Figure_path = os.path.join(figure_dir, figure_name)
         else: 
-            raise TypeError(f"'{Figure_name}' must be a string.")
+            raise TypeError(f"'{figure_name}' must be a string.")
 
         return Figure_path
     
@@ -67,7 +67,7 @@ class SaveOutput:
         # Create data directory if it doesn't exist
         os.makedirs(data_dir, exist_ok=True)
 
-        # Ensure the output Figure_name is a string 
+        # Ensure the output figure_name is a string 
         if isinstance(data_name, str):
             Data_file_path = os.path.join(data_dir, data_name)
         else: 
