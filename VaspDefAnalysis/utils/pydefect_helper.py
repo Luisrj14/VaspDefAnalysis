@@ -48,12 +48,3 @@ def concatenated_defect_energies_summary(defect_energy_summary_1, defect_energy_
     # Write the merged data to the output file
     with open(save_output_path, 'w') as out_file:
         json.dump(merged_data, out_file, indent=4)
-
-
-
-# Example usage
-defect_energy_summary_1 = "outputs/supercell/defect_sumaries/parse_defect_infomation_summary.json"
-defect_energy_summary_2 = "/home/luis/master_thesis_uio/thesis_project/output_from_vasp_saga/project_AlN/calcualtion_steps/supercell/defect_supercell/gga-PBE/defect/V_N/defect_energy_summary.json"
-save_output_path = 'outputs/supercell/defect_sumaries/parse_defect_infomation_summary.json'
-
-concatenated_defect_energies_summary(defect_energy_summary_1, defect_energy_summary_2, save_output_path)
