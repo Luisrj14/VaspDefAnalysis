@@ -1,6 +1,6 @@
 import json
 
-def concatenated_defect_energies_summary(defect_energy_summary_1, defect_energy_summary_2, save_output_path):
+def concatenate_defect_energies_summary(defect_energy_summary_1, defect_energy_summary_2, save_output_path):
     # Load the JSON data from the two files
     with open(defect_energy_summary_1, 'r') as f1:
         data1 = json.load(f1)
