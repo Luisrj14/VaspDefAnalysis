@@ -68,7 +68,7 @@ class PlotLocalizedStates:
             A dictionary of standardized plot settings.
         """
         # Define default settings
-        default_settings = {
+        self.default_settings = {
             "scatter_settings": {'s': 100, 'linewidths': 0.01, 'edgecolor': 'black', "cmap": "viridis"},
             "vbm_color": "black",  
             "cbm_color": "black",     
@@ -85,11 +85,12 @@ class PlotLocalizedStates:
             "colorbar_label": "Location factor",
             "label_size": 12,
             "figsize": 6,
-            "layout": "vertical"
+            "layout": "vertical",
+            "IPR":{"gvec": None, "Cg":None, "ngrid":None,"rescale":None, "kr_phase":False, "r0":[0.0, 0.0, 0.0]}
         }
         
         # Validate keys
-        valid_keys = default_settings.keys()
+        valid_keys = self.default_settings.keys()
         invalid_keys = [key for key in plot_settings if key not in valid_keys]
         if invalid_keys:
             raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
@@ -98,10 +99,10 @@ class PlotLocalizedStates:
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
         for dict_key in dict_keys:
             if dict_key in plot_settings:
-                plot_settings[dict_key] = {**default_settings[dict_key], **plot_settings[dict_key]}
+                plot_settings[dict_key] = {**self.default_settings[dict_key], **plot_settings[dict_key]}
     
         # Update default settings with user-provided settings
-        validated_settings = {**default_settings, **plot_settings}
+        validated_settings = {**self.default_settings, **plot_settings}
         return validated_settings
     
     def plot_localized_state(
@@ -332,7 +333,7 @@ class PlotLocalizedStates:
             It is by default  `True`
 
         **plot_setting:
-            Additional keyword arguments for customizing the plot appearance.
+            Additional keyword arguments for customizing the plot appearance and IPR consideration.
         
         Returns:
         -------
@@ -361,7 +362,7 @@ class PlotLocalizedStates:
                                                                            lgamma=lgamma,
                                                                            gamma_half=gamma_half,
                                                                            omp_num_threads=omp_num_threads,
-                                                                           norm=norm)
+                                                                           norm=norm,**plot_setting)
         
         # Create an instance of PlotLocalizedStates class 
         plotter = PlotLocalizedStates(kpoints_dict=kpoint_values_dic,eigenvalues_dict=Kohn_Sham_eigenvalues_dic,localized_paramter_dict=ipr_values_dic)

@@ -118,7 +118,7 @@ class PlotKohnShamEigenvalue:
             A dictionary of standardized plot settings.
         """
         # Define default settings
-        default_settings = {
+        self.default_settings = {
         "occupied_color": "red",
         "occupied_marker": "o",
         "unoccupied_color": "blue",
@@ -145,7 +145,7 @@ class PlotKohnShamEigenvalue:
         }
         
         # Validate keys
-        valid_keys = default_settings.keys()
+        valid_keys = self.default_settings.keys()
         invalid_keys = [key for key in plot_setting if key not in valid_keys]
         if invalid_keys:
             raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
@@ -155,10 +155,10 @@ class PlotKohnShamEigenvalue:
         for dict_key in dict_keys:
             if dict_key in plot_setting:
                 # Update the existing dictionary with new settings from plot_setting
-                plot_setting[dict_key] = {**default_settings[dict_key], **plot_setting[dict_key]}
+                plot_setting[dict_key] = {**self.default_settings[dict_key], **plot_setting[dict_key]}
     
         # Update default settings with user-provided settings
-        validated_settings = {**default_settings, **plot_setting}
+        validated_settings = {**self.default_settings, **plot_setting}
         return validated_settings
 
     def plot_KS_eigenvalues(self, 
@@ -401,9 +401,3 @@ class PlotKohnShamEigenvalue:
         plotter = PlotKohnShamEigenvalue(eigenvalues_dict, occupancy_dict, kpoints_dict)
         fig = plotter.plot_KS_eigenvalues(VBM=VBM,CBM=CBM,y_limit=y_limit,fermi_energy_reference=fermi_energy_reference,show_fill_up=show_fill_up,**plot_setting)
         return fig
-
-
-
-
-
-
