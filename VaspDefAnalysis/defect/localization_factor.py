@@ -28,10 +28,10 @@ class LocalizedStates:
             Path to the perfect structure.
         defect_structure_file : str
             Path to the defect structure without relaxing.
-        tolerance : float = 1e-1
-            Tolerance for identifying neighbors.
-        add_neighbors_up : int = 1
-            Additional neighbors to consider.
+        radius : float
+            The radius within which atoms are considered neighbors.
+        tolerance : float
+            Tolerance for identifying defect. Default is 1e-3.
 
         Note: The defect_structure_path has to be without relaxing otherwise the result can be wrong.
         """

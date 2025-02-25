@@ -28,7 +28,7 @@ class DefectAnalisys:
         defect_structure_file : str
             Path or file to the defect structure, in VASP format without relaxing.
         tolerance : float, optional
-            The tolerance for identifying defects (default is 1e-1).
+            The tolerance for identifying defects (default is 1e-3).
         add_neighbors_up : int, optional
             The number of additional neighbors to consider (default is 1).
         """

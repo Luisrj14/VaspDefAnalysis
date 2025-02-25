@@ -238,6 +238,8 @@ class PlotLocalizedStates:
             Path to the file containing the defective structure.
         vasprun_defect_path : str
             Path to the `vasprun.xml` file for the defect calculation.
+        radius : float
+            The radius within which atoms are considered neighbors.
         VBM : float
             The Valence Band Maximum (VBM) energy in eV.
         CBM : float
@@ -249,9 +251,7 @@ class PlotLocalizedStates:
         show_fill_up : bool, optional
             If `True`, fill the occupied states up to the Fermi level. Default is `True`.
         tolerance : float, optional
-            Tolerance for identifying neighboring ions around the defect site. Default is `1e-1`.
-        add_neighbors_up : int, optional
-            Number of additional neighbors to include around the defect site. Default is `1`.
+            Tolerance for identifying defect. Default is `1e-3`.
         norm : bool, optional
             If True, normalizes the weights by the total weight for each k-point. Defaults to `True`.
         **plot_setting
