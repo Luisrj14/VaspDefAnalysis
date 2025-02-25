@@ -103,7 +103,7 @@ class PlotKohnShamEigenvalue:
         nice_x_labels = generate_fraction_labels_for_kpoints(kpt_coords=kpt_coords,line_break=line_break)
         return nice_x_labels
     
-    def plot_setting_kwargs(self, **plot_setting):
+    def plot_setting(self, **plot_setting):
         """
         Handle and validate keyword arguments for plot customization.
 
@@ -118,7 +118,7 @@ class PlotKohnShamEigenvalue:
             A dictionary of standardized plot settings.
         """
         # Define default settings
-        self.default_settings = {
+        default_settings = {
         "occupied_color": "red",
         "occupied_marker": "o",
         "unoccupied_color": "blue",
@@ -145,7 +145,7 @@ class PlotKohnShamEigenvalue:
         }
         
         # Validate keys
-        valid_keys = self.default_settings.keys()
+        valid_keys = default_settings.keys()
         invalid_keys = [key for key in plot_setting if key not in valid_keys]
         if invalid_keys:
             raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
@@ -155,10 +155,10 @@ class PlotKohnShamEigenvalue:
         for dict_key in dict_keys:
             if dict_key in plot_setting:
                 # Update the existing dictionary with new settings from plot_setting
-                plot_setting[dict_key] = {**self.default_settings[dict_key], **plot_setting[dict_key]}
+                plot_setting[dict_key] = {**default_settings[dict_key], **plot_setting[dict_key]}
     
         # Update default settings with user-provided settings
-        validated_settings = {**self.default_settings, **plot_setting}
+        validated_settings = {**default_settings, **plot_setting}
         return validated_settings
 
     def plot_KS_eigenvalues(self, 
@@ -214,7 +214,7 @@ class PlotKohnShamEigenvalue:
         """
         
         # Handle plot settings
-        plot_settings = self.plot_setting_kwargs(**plot_setting)
+        plot_settings = self.plot_setting(**plot_setting)
                 
         # Use classified eigenvalues for better organization
         classified_eigenvalues = self.classify_eigenvalues_to_occupancy()

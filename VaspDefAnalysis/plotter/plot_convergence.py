@@ -28,7 +28,7 @@ class ConvergencePlot(ConvergenceTools):
         self.axis_x_name = axis_x_name
         self.axis_y_name = axis_y_name
 
-    def plot_setting_kwargs(self, **plot_setting):
+    def plot_setting(self, **plot_setting):
         """
         Handle and validate keyword arguments for plot customization.
 
@@ -110,7 +110,7 @@ class ConvergencePlot(ConvergenceTools):
         #if len(relative_values) != len(cutoff_values):
         #    raise ValueError("Lengths of relative_values and cutoff_values must match.")
 
-        plot_settings = self.plot_setting_kwargs(**settings)
+        plot_settings = self.plot_setting(**settings)
         
         fig, ax = plt.subplots(figsize=plot_settings["figsize"])
         cutoff_values_new, convergence_cutoff_values = super().find_convergence_values(relative_values, cutoff_values, conv_criterion)
@@ -170,7 +170,7 @@ class ConvergencePlot(ConvergenceTools):
         if len(relative_values) != len(cutoff_values):
             raise ValueError("Lengths of relative_values and cutoff_values must match.")
 
-        plot_settings = self.plot_setting_kwargs(**settings)
+        plot_settings = self.plot_setting(**settings)
         
         fig, ax = plt.subplots(figsize=plot_settings["figsize"])
        

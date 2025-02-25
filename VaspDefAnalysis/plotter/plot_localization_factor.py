@@ -53,7 +53,7 @@ class PlotLocalizedStates:
         nice_x_labels = generate_fraction_labels_for_kpoints(kpt_coords=kpt_coords, line_break=line_break)
         return nice_x_labels
     
-    def plot_setting_kwargs(self, **plot_settings):
+    def plot_setting(self, **plot_settings):
         """
         Handle and validate keyword arguments for plot customization.
 
@@ -68,7 +68,7 @@ class PlotLocalizedStates:
             A dictionary of standardized plot settings.
         """
         # Define default settings
-        self.default_settings = {
+        default_settings = {
             "scatter_settings": {'s': 100, 'linewidths': 0.01, 'edgecolor': 'black', "cmap": "viridis"},
             "vbm_color": "black",  
             "cbm_color": "black",     
@@ -90,7 +90,7 @@ class PlotLocalizedStates:
         }
         
         # Validate keys
-        valid_keys = self.default_settings.keys()
+        valid_keys = default_settings.keys()
         invalid_keys = [key for key in plot_settings if key not in valid_keys]
         if invalid_keys:
             raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
@@ -99,10 +99,10 @@ class PlotLocalizedStates:
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
         for dict_key in dict_keys:
             if dict_key in plot_settings:
-                plot_settings[dict_key] = {**self.default_settings[dict_key], **plot_settings[dict_key]}
+                plot_settings[dict_key] = {**default_settings[dict_key], **plot_settings[dict_key]}
     
         # Update default settings with user-provided settings
-        validated_settings = {**self.default_settings, **plot_settings}
+        validated_settings = {**default_settings, **plot_settings}
         return validated_settings
     
     def plot_localized_state(
@@ -138,7 +138,7 @@ class PlotLocalizedStates:
             The generated figure object.
         """
         # Handle plot settings
-        plot_settings = self.plot_setting_kwargs(**plot_settings)
+        plot_settings = self.plot_setting(**plot_settings)
 
         # Determine layout and create subplots
         num_spins = len(self.eigenvalues_dict)
