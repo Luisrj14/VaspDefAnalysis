@@ -74,7 +74,7 @@ def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms,
         raise ValueError("No neighbors found.")  # Raise an error if no neighbors are found
     
     # Remove all occurrences of 0.0 (the reference position itself)
-    distances = distances[distances != 0.0]
+    #distances = distances[distances != 0.0]
     
     # Sort the distances to find the nearest ones
     distances_sorted = sorted(distances)
@@ -82,10 +82,10 @@ def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms,
     # Identify unique neighbor distances within the tolerance range
     neighbors_distances = [distances_sorted[0]]
     for i in range(len(distances_sorted)-1):
-        
         # Check if the next distance is sufficiently different from the current one
-        if abs(distances_sorted[i+1] - distances_sorted[i]) >= tolerance:
+        if abs(distances_sorted[i+1] - distances_try) >= tolerance:
             neighbors_distances.append(distances_sorted[i+1])
+            distances_try = distances_sorted[i+1]
     
     index_neighbors = []  # Store indices of neighbors
     distance_neighbors = []  # Store distances of neighbors
@@ -151,7 +151,7 @@ def find_indexs_positions_distances__symbols_inside_raduis(structure: Atoms,
     # Loop through the distances and check which are within the radius
     index = 0
     for dis in distances:
-        if dis < radius:
+        if dis < radius and dis != 0.0:
             distances_inside_radius.append(dis)
             index_inside_radius.append(index)
         index+=1
