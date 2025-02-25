@@ -12,8 +12,8 @@ class LocalizedStates:
     def get_localization_factor_using_IOWs(perfect_structure_path:str,
                                            defect_structure_path:str,
                                            defect_vasprun_path:str,
-                                           tolerance=1e-1,
-                                           add_neighbors_up:int=1,
+                                           radius:float,
+                                           tolerance=1e-3,
                                            norm:bool= False
                                            ):
         """
@@ -38,8 +38,8 @@ class LocalizedStates:
 
         ion_neighbor_indeces_to_defects = DefectAnalisys.get_ion_neighbor_indices_to_defects(perfect_structure_file=perfect_structure_path,
                                                                                              defect_structure_file=defect_structure_path,
-                                                                                             tolerance=tolerance,
-                                                                                             add_neighbors_up=add_neighbors_up)
+                                                                                             radius=radius,
+                                                                                             tolerance=tolerance)
         ion_orbital_total_weight_neighbors_to_defects = get_ion_orbital_total_weight_neighbors_to_defects(vasprun_path=defect_vasprun_path,
                                                                                                           ion_neighbor_indeces_to_defects=ion_neighbor_indeces_to_defects,
                                                                                                           norm=norm)

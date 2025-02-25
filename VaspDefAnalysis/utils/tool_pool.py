@@ -141,11 +141,7 @@ def find_indexs_positions_distances__symbols_inside_raduis(structure: Atoms,
     
     # Calculate distances from the center to all atoms
     distances = find_relative_distance_from_poscar_with_respect_to_position(structure, radius_centered_in_position)
-
-    # Ensure there are at least two unique distances (i.e., the defect site and at least one neighbor)
-    if len(distances) < 2:
-        raise ValueError("No neighbors found.")  # Raise an error if no neighbors are found
-    
+   
     index_inside_radius = []  # Indices of atoms within the radius
     distances_inside_radius = []  # Distances of atoms within the radius
 
@@ -162,9 +158,16 @@ def find_indexs_positions_distances__symbols_inside_raduis(structure: Atoms,
 
     # Get the chemical symbols of the neighbors
     chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_inside_radius]
-    
-    neighbors_imformation = {"indexs":index_inside_radius,"distances":distances_inside_radius,"posiitions":neighbors_inside_radius,"symbols":chemical_symbols}
-    return neighbors_imformation
+
+    # Ensure at least one neighbor is found
+    if not index_inside_radius:
+        raise ValueError("No neighbors found within the given radius.")
+            
+    return {
+            "indexs":index_inside_radius,
+            "distances":distances_inside_radius,
+            "posiitions":neighbors_inside_radius,
+            "symbols":chemical_symbols}
 
 class SIUnitConverter:
     """A class to provide SI multiples and submultiples for a given value and unit."""

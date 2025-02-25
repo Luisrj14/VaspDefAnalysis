@@ -3,7 +3,7 @@ import numpy as np
 from ase import Atoms
 
 #from tools_packages.utils.tool_pool import find_relative_distance_from_poscar_with_respect_to_position
-from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances_symbols_to_neighbors
+from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances__symbols_inside_raduis
 
 class DefectAnalisys:
     """
@@ -14,8 +14,9 @@ class DefectAnalisys:
     def __init__(self,
                  perfect_structure_file:str,
                  defect_structure_file:str,
-                 tolerance=1e-1,
-                 add_neighbors_up:int=1):
+                 radius:float=None,
+                 tolerance=1e-3,
+                 ):
 
         """
         Initializes the DefectAnalisys class with the perfect and defect structures.
@@ -34,7 +35,7 @@ class DefectAnalisys:
         self.perfect_structure = read(perfect_structure_file, format='vasp') if isinstance(perfect_structure_file, str) else perfect_structure_file
         self.defect_structure = read(defect_structure_file, format='vasp')  if isinstance(defect_structure_file, str) else defect_structure_file
         self.tolerance = tolerance
-        self.add_neighbors_up = add_neighbors_up
+        self.radius = radius
 
     def analyze_defect(self):
         """
@@ -134,20 +135,24 @@ class DefectAnalisys:
         list
             A list of unique indices of neighboring atoms to the defect.
         """
+
         all_neighbor_indices = []  # List to store all the neighbor indices for each defect position
 
         # Get the defect positions from the structure
         defect_positions = self.get_defect_positions()
 
+        if self.radius == None:
+            raise ValueError(f"It requires a value for the radius parameter to detect the neighbor. By default, the value is set to {self.radius}.")
+
+        
         # Loop through each defect position
         for def_pos in defect_positions:
             # Get indices, positions, and distances of the neighbors to the current defect position
-            neighbor_indices = find_indexs_positions_distances_symbols_to_neighbors(
+            neighbor_indices = find_indexs_positions_distances__symbols_inside_raduis(
                 structure=self.defect_structure,        # The defect structure
-                neighbors_to_position=def_pos,          # The current defect position
-                tolerance=self.tolerance,               # Tolerance for distance calculations
-                add_neighbors_up=self.add_neighbors_up  # Add neighbors
-            )["indexs"]
+                radius_centered_in_position=def_pos,          # The current defect position
+                radius=self.radius
+                )["indexs"]
 
             # Add the susitutional or interestitial indexes of the defect.
             index_defect = 0 
@@ -177,8 +182,9 @@ class DefectAnalisys:
     @staticmethod
     def get_ion_neighbor_indices_to_defects(perfect_structure_file:str,
                                             defect_structure_file:str,
-                                            tolerance:float=1e-1,
-                                            add_neighbors_up:int=1):
+                                            radius:float,
+                                            tolerance:float=1e-3,
+                                            ):
         """
         Static method to retrieve neighbor indices for defect analysis.
 
@@ -201,8 +207,8 @@ class DefectAnalisys:
         # Analyze defect
         defect_analyzed = DefectAnalisys(perfect_structure_file=perfect_structure_file,
                                          defect_structure_file=defect_structure_file,
-                                         tolerance=tolerance,
-                                         add_neighbors_up=add_neighbors_up)
+                                         radius=radius,
+                                         tolerance=tolerance)
         return defect_analyzed.ion_neighbor_indices_to_defects()
     
     def get_defect_information(self):

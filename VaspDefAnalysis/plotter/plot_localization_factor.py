@@ -217,13 +217,13 @@ class PlotLocalizedStates:
                                perfect_structure_path:str,   
                                defect_structure_path:str,
                                defect_vasprun_path:str,
+                               radius:float,
                                VBM: float,
                                CBM: float,
                                y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
                                fermi_energy_reference: bool = True,
                                show_fill_up: bool = True,
-                               tolerance=1e-1,
-                               add_neighbors_up:int=1,
+                               tolerance=1e-3,
                                norm:bool=True,
                                **plot_settings
                                 ) -> plt.Figure:
@@ -277,8 +277,8 @@ class PlotLocalizedStates:
         localization_factor_dic_using_IOWs =LocalizedStates.get_localization_factor_using_IOWs(perfect_structure_path=perfect_structure_path,
                                                                                                defect_structure_path=defect_structure_path,
                                                                                                defect_vasprun_path=defect_vasprun_path,
+                                                                                               radius=radius,
                                                                                                tolerance=tolerance,
-                                                                                               add_neighbors_up=add_neighbors_up,
                                                                                                norm=norm)
 
         # Create an instance of PlotLocalizedStates class 
