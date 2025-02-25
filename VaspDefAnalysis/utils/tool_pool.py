@@ -37,77 +37,78 @@ def find_relative_distance_from_poscar_with_respect_to_position(structure: Atoms
 
     return distances    
 
-def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms, 
-                                                        neighbors_to_position: np.ndarray, 
-                                                        tolerance:float=1e-1,
-                                                        add_neighbors_up:int = 1
-                                                        ):
-    """
-    Finds the neighbors of a defect site based on the minimum non-zero distance.
-
-    Parameters:
-    ----------
-    structure : ase.Atoms
-        The supercell structure as an ASE Atoms object containing atomic positions and metadata.
-
-    neighbors_to_position : array-like
-        The position of the defect in Cartesian coordinates (1D array of length 3, e.g., [x, y, z]).
-
-    tolerance : float, optional
-        The tolerance value to account for numerical errors when comparing distances (default is 1e-5).
-
-    add_neighbors_up : int, optional
-        Number of neighbor distances to consider (default is 1, which finds the first nearest neighbors).
-
-    Returns:
-    -------
-    tuple
-        A tuple containing:
-        - index_neighbors (list[int]): Indices of the neighbors.
-        - distances_neighbors (list[float]): Distances to the neighbors.
-        - neighbors_positions (list[np.ndarray]): Positions of the neighbors.
-    """
-    distances = find_relative_distance_from_poscar_with_respect_to_position(structure, neighbors_to_position)
-
-    # Ensure there are at least two unique distances (i.e., the defect site and at least one neighbor)
-    if len(distances) < 2:
-        raise ValueError("No neighbors found.")  # Raise an error if no neighbors are found
-    
-    # Remove all occurrences of 0.0 (the reference position itself)
-    #distances = distances[distances != 0.0]
-    
-    # Sort the distances to find the nearest ones
-    distances_sorted = sorted(distances)
-
-    # Identify unique neighbor distances within the tolerance range
-    neighbors_distances = [distances_sorted[0]]
-    for i in range(len(distances_sorted)-1):
-        # Check if the next distance is sufficiently different from the current one
-        if abs(distances_sorted[i+1] - distances_try) >= tolerance:
-            neighbors_distances.append(distances_sorted[i+1])
-            distances_try = distances_sorted[i+1]
-    
-    index_neighbors = []  # Store indices of neighbors
-    distance_neighbors = []  # Store distances of neighbors
-
-    # Loop through the specified number of neighbors
-    for add_up in range(add_neighbors_up):
-        index = 0
-        for dis in distances:
-            if abs(dis - neighbors_distances[add_up]) <= tolerance:
-                index_neighbors.append(index)
-                distance_neighbors.append(dis)
-
-            index+=1
-        
-        # Get the positions of the neighbors from the structure using the identified indices
-        neighbors_posiitions = [structure.get_positions()[i] for i in index_neighbors]
-
-        # Get the chemical symbols of the neighbors
-        chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_neighbors]
-    
-    neighbors_imformation = {"indexs":index_neighbors,"distances":distance_neighbors,"positions":neighbors_posiitions,"symbols":chemical_symbols}
-    return neighbors_imformation
+#def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms, 
+#                                                        neighbors_to_position: np.ndarray, 
+#                                                        tolerance:float=1e-1,
+#                                                        add_neighbors_up:int = 1
+#                                                        ):
+#    """
+#    Finds the neighbors of a defect site based on the minimum non-zero distance.
+#
+#    Parameters:
+#    ----------
+#    structure : ase.Atoms
+#        The supercell structure as an ASE Atoms object containing atomic positions and metadata.
+#
+#    neighbors_to_position : array-like
+#        The position of the defect in Cartesian coordinates (1D array of length 3, e.g., [x, y, z]).
+#
+#    tolerance : float, optional
+#        The tolerance value to account for numerical errors when comparing distances (default is 1e-5).
+#
+#    add_neighbors_up : int, optional
+#        Number of neighbor distances to consider (default is 1, which finds the first nearest neighbors).
+#
+#    Returns:
+#    -------
+#    tuple
+#        A tuple containing:
+#        - index_neighbors (list[int]): Indices of the neighbors.
+#        - distances_neighbors (list[float]): Distances to the neighbors.
+#        - neighbors_positions (list[np.ndarray]): Positions of the neighbors.
+#    """
+#    distances = find_relative_distance_from_poscar_with_respect_to_position(structure, neighbors_to_position)
+#
+#    # Ensure there are at least two unique distances (i.e., the defect site and at least one neighbor)
+#    if len(distances) < 2:
+#        raise ValueError("No neighbors found.")  # Raise an error if no neighbors are found
+#    
+#    # Remove all occurrences of 0.0 (the reference position itself)
+#    #distances = distances[distances != 0.0]
+#    
+#    # Sort the distances to find the nearest ones
+#    distances_sorted = sorted(distances)
+#
+#    # Identify unique neighbor distances within the tolerance range
+#    neighbors_distances = [distances_sorted[0]]
+#    distances_try = distances_sorted[0]
+#    for i in range(len(distances_sorted)-1):
+#        # Check if the next distance is sufficiently different from the current one
+#        if abs(distances_sorted[i+1] - distances_try) >= tolerance:
+#            neighbors_distances.append(distances_sorted[i+1])
+#            distances_try = distances_sorted[i+1]
+#    
+#    index_neighbors = []  # Store indices of neighbors
+#    distance_neighbors = []  # Store distances of neighbors
+#
+#    # Loop through the specified number of neighbors
+#    for add_up in range(add_neighbors_up):
+#        index = 0
+#        for dis in distances:
+#            if abs(dis - neighbors_distances[add_up]) <= tolerance:
+#                index_neighbors.append(index)
+#                distance_neighbors.append(dis)
+#
+#            index+=1
+#        
+#        # Get the positions of the neighbors from the structure using the identified indices
+#        neighbors_posiitions = [structure.get_positions()[i] for i in index_neighbors]
+#
+#        # Get the chemical symbols of the neighbors
+#        chemical_symbols = [structure.get_chemical_symbols()[i] for i in index_neighbors]
+#    
+#    neighbors_imformation = {"indexs":index_neighbors,"distances":distance_neighbors,"positions":neighbors_posiitions,"symbols":chemical_symbols}
+#    return neighbors_imformation
 
 
 def find_indexs_positions_distances__symbols_inside_raduis(structure: Atoms,
@@ -151,7 +152,7 @@ def find_indexs_positions_distances__symbols_inside_raduis(structure: Atoms,
     # Loop through the distances and check which are within the radius
     index = 0
     for dis in distances:
-        if dis < radius and dis != 0.0:
+        if 0.0 < dis < radius:
             distances_inside_radius.append(dis)
             index_inside_radius.append(index)
         index+=1
