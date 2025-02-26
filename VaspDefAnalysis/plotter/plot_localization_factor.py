@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from VaspDefAnalysis.defect.defect_analisys import DefectAnalisys
+#from VaspDefAnalysis.defect.defect_analisys import StructureComparator
 from VaspDefAnalysis.read_vasp.vasprun_analysis import VaspRunAnalysis
 #from VaspDefAnalysis.defect.localization_factor import get_ion_orbital_total_weight_neighbors_to_defects,get_ipr_values
 from VaspDefAnalysis.defect.localization_factor import LocalizedStates

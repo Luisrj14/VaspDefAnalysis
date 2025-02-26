@@ -5,7 +5,7 @@ from ase import Atoms
 #from tools_packages.utils.tool_pool import find_relative_distance_from_poscar_with_respect_to_position
 from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances__symbols_inside_raduis
 
-class DefectAnalisys:
+class StructureComparator:
     """
     A class to perform defect analysis by comparing perfect and defect structures.
     Identifies vacancies, interstitials, and substitutions, and complex.
@@ -37,7 +37,7 @@ class DefectAnalisys:
         self.tolerance = tolerance
         self.radius = radius
 
-    def analyze_defect(self):
+    def structure_diff(self):
         """
         Compares the perfect and defect structures to identify defects (including complex defects).
 
@@ -108,7 +108,7 @@ class DefectAnalisys:
         list
             A list of defect positions: [np.array(position), ...]
         """
-        defects = self.analyze_defect()
+        defects = self.structure_diff()
 
         defect_positions = []
 
@@ -205,7 +205,7 @@ class DefectAnalisys:
             Unique neighbor indices.
         """
         # Analyze defect
-        defect_analyzed = DefectAnalisys(perfect_structure_file=perfect_structure_file,
+        defect_analyzed = StructureComparator(perfect_structure_file=perfect_structure_file,
                                          defect_structure_file=defect_structure_file,
                                          radius=radius,
                                          tolerance=tolerance)
@@ -217,7 +217,7 @@ class DefectAnalisys:
         Prints detailed information about the detected defects.
         """
         
-        analyze_defects = self.analyze_defect()
+        analyze_defects = self.structure_diff()
         vacancies = analyze_defects['vacancies']
         interstitials = analyze_defects['interstitials']
         substitutions = analyze_defects['substitutions']
