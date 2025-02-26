@@ -194,7 +194,7 @@ class ConvergencePlot(ConvergenceTools):
     @staticmethod
     def get_diff_convergence_plot(relative_values: np.ndarray,
                                   cutoff_values: np.ndarray,
-                                  conv_criterion: float,
+                                  conv_criterion: float, # [eV]
                                   title_name: str = "Relative energy vs Energy cutoff",
                                   axis_x_name: str = "Energy cutoff [eV]",
                                   axis_y_name: str = r'$|\,\Delta E \,| $', #r'$|\Delta E|$ [meV/#atoms]', 
@@ -248,6 +248,7 @@ class ConvergencePlot(ConvergenceTools):
         conver_unit_2 = SIUnitConverter(value=conv_criterion,unit=SI_unit)
         new_conv_criterion,new_unit_conv_criterion = conver_unit_2.convert(prefix=use_SI_prefixes)
 
+        #new_conv_criterion_round = round(new_conv_criterion,3)
         
         plot = ConvergencePlot(
             title_name=title_name,

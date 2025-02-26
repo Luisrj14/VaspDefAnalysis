@@ -15,7 +15,7 @@ class DefectAnalisys:
                  perfect_structure_file:str,
                  defect_structure_file:str,
                  radius:float=None,
-                 tolerance=1e-3,
+                 tolerance=2e-1,
                  ):
 
         """
@@ -72,20 +72,20 @@ class DefectAnalisys:
         # Analyze vacancies: Atoms in perfect structure not found in defect structure
         for perfect_symbol, perfect_position in zip(perfect_symbols, perfect_positions):
             distances = np.linalg.norm(defect_positions - perfect_position, axis=1)
-            if np.all(distances > tolerance):  
+            if np.all(distances >= tolerance):  
                 vacancies.append((perfect_symbol, perfect_position))
 
         # Analyze interstitials: Atoms in defect structure not found in perfect structure
         for defect_symbol, defect_position in zip(defect_symbols, defect_positions):
             distances = np.linalg.norm(perfect_positions - defect_position, axis=1)
-            if np.all(distances > tolerance):  # No matching position in perfect
+            if np.all(distances >= tolerance):  # No matching position in perfect
                 interstitials.append((defect_symbol, defect_position))
 
         # Analyze substitutions: Atoms in perfect structure replaced with different atoms in defect structure
         for perfect_symbol, perfect_position in zip(perfect_symbols, perfect_positions):
             distances = np.linalg.norm(defect_positions - perfect_position, axis=1)
             closest_index = np.argmin(distances)
-            if distances[closest_index] < tolerance:  # Close match found
+            if distances[closest_index] <= tolerance:  # Close match found
                 defect_symbol = defect_symbols[closest_index]
                 if perfect_symbol != defect_symbol:
                     substitutions.append((perfect_symbol, defect_symbol, defect_positions[closest_index]))
