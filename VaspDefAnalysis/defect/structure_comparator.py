@@ -178,39 +178,7 @@ class StructureComparator:
         
         # Return the list of unique neighbor indices
         return neighbor_indices_without_repetation
-    
- #   @staticmethod
- #   def get_ion_neighbor_indices_to_defects(perfect_structure_file:str,
- #                                           defect_structure_file:str,
- #                                           radius:float,
- #                                           tolerance:float=2e-1,
- #                                           ):
- #       """
- #       Static method to retrieve neighbor indices for defect analysis.
- #
- #       Parameters:
- #       ----------
- #       perfect_structure_file : str
- #           Path to the perfect structure.
- #       defect_structure_file : str
- #           Path to the defect structure without relaxing.
- #       tolerance : float
- #           Tolerance for identifying neighbors.
- #       add_neighbors_up : int
- #           Additional neighbors to consider.
- #
- #       Returns:
- #       -------
- #       list
- #           Unique neighbor indices.
- #       """
- #       # Analyze defect
- #       defect_analyzed = StructureComparator(perfect_structure_file=perfect_structure_file,
- #                                        defect_structure_file=defect_structure_file,
- #                                        radius=radius,
- #                                        tolerance=tolerance)
- #       return defect_analyzed.ion_neighbor_indices_to_defects()
-    
+
     def get_defect_information(self):
 
         """

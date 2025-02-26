@@ -162,8 +162,8 @@ class PlotKohnShamEigenvalue:
         return validated_settings
 
     def plot_KS_eigenvalues(self, 
-                         VBM:float,
-                         CBM:float,
+                         VBM:float,     # [eV] 
+                         CBM:float,     # [eV]
                          y_limit:tuple|None="(VBM-1.5,CBM+1.5)",
                          fermi_energy_reference:bool = True,
                          show_fill_up:bool=True,
@@ -359,8 +359,8 @@ class PlotKohnShamEigenvalue:
     @staticmethod
     def get_plot_KS_eigenvalues(
                                 vasprun_path: str,
-                                VBM:float,
-                                CBM:float,
+                                VBM:float,      # [eV]      
+                                CBM:float,      # [eV]
                                 y_limit:tuple|None="(VBM-1.5,CBM+1.5)",
                                 fermi_energy_reference:bool = True,
                                 show_fill_up:bool = True,

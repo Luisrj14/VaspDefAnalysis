@@ -107,8 +107,8 @@ class PlotLocalizedStates:
     
     def plot_localized_state(
         self,
-        VBM: float,
-        CBM: float,
+        VBM: float,     # [eV] 
+        CBM: float,     # [eV]
         y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
         fermi_energy_reference: bool = True,
         show_fill_up: bool = True,
@@ -217,9 +217,9 @@ class PlotLocalizedStates:
                                perfect_structure_path:str,   
                                defect_structure_path:str,
                                defect_vasprun_path:str,
-                               radius:float,
-                               VBM: float,
-                               CBM: float,
+                               radius:float,    # [Å]
+                               VBM: float,      # [eV]
+                               CBM: float,      # [eV]
                                y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
                                fermi_energy_reference: bool = True,
                                show_fill_up: bool = True,
