@@ -3,7 +3,7 @@ import numpy as np
 from ase import Atoms
 
 #from tools_packages.utils.tool_pool import find_relative_distance_from_poscar_with_respect_to_position
-from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances__symbols_inside_raduis
+from VaspDefAnalysis.utils.tool_pool import find_indexs_positions_distances_symbols_inside_raduis
 
 class StructureComparator:
     """
@@ -148,7 +148,7 @@ class StructureComparator:
         # Loop through each defect position
         for def_pos in defect_positions:
             # Get indices, positions, and distances of the neighbors to the current defect position
-            neighbor_indices = find_indexs_positions_distances__symbols_inside_raduis(
+            neighbor_indices = find_indexs_positions_distances_symbols_inside_raduis(
                 structure=self.defect_structure,        # The defect structure
                 radius_centered_in_position=def_pos,          # The current defect position
                 radius=self.radius
