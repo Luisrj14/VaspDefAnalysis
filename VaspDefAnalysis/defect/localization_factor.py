@@ -1,4 +1,4 @@
-from VaspDefAnalysis.defect.defect_analisys import StructureComparator
+from defect.structure_comparator import StructureComparator
 from VaspDefAnalysis.defect.tool_defect import get_ion_orbital_total_weight_neighbors_to_defects,get_ipr_values
 
 class LocalizedStates:
