@@ -36,10 +36,11 @@ class LocalizedStates:
         Note: The defect_structure_path has to be without relaxing otherwise the result can be wrong.
         """
 
-        ion_neighbor_indeces_to_defects = StructureComparator.get_ion_neighbor_indices_to_defects(perfect_structure_file=perfect_structure_path,
-                                                                                             defect_structure_file=defect_structure_path,
-                                                                                             radius=radius,
-                                                                                             tolerance=tolerance)
+        ion_neighbor_indeces_to_defects = StructureComparator(perfect_structure_file=perfect_structure_path,
+                                                             defect_structure_file=defect_structure_path,
+                                                             radius=radius,
+                                                             tolerance=tolerance).ion_neighbor_indices_to_defects()
+        
         ion_orbital_total_weight_neighbors_to_defects = get_ion_orbital_total_weight_neighbors_to_defects(vasprun_path=defect_vasprun_path,
                                                                                                           ion_neighbor_indeces_to_defects=ion_neighbor_indeces_to_defects,
                                                                                                           norm=norm)
