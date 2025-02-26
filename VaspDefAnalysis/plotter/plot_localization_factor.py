@@ -223,7 +223,7 @@ class PlotLocalizedStates:
                                y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
                                fermi_energy_reference: bool = True,
                                show_fill_up: bool = True,
-                               tolerance=1e-3,
+                               tolerance=2e-1,
                                norm:bool=True,
                                **plot_settings
                                 ) -> plt.Figure:

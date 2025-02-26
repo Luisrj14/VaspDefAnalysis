@@ -13,7 +13,7 @@ class LocalizedStates:
                                            defect_structure_path:str,
                                            defect_vasprun_path:str,
                                            radius:float,
-                                           tolerance=1e-3,
+                                           tolerance=2e-1,
                                            norm:bool= False
                                            ):
         """

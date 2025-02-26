@@ -183,7 +183,7 @@ class StructureComparator:
     def get_ion_neighbor_indices_to_defects(perfect_structure_file:str,
                                             defect_structure_file:str,
                                             radius:float,
-                                            tolerance:float=1e-3,
+                                            tolerance:float=2e-1,
                                             ):
         """
         Static method to retrieve neighbor indices for defect analysis.
