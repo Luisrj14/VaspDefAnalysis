@@ -123,61 +123,53 @@ class StructureComparator:
                     defect_positions.append(defect[2])
         return defect_positions
 
-    def ion_neighbor_indices_to_defects(self)-> list:
+    def ion_neighbor_indices_to_defects(self, add_self_index=True) -> list:
         """
         Retrieves the indices of all neighboring atoms to the defect site, ensuring no duplicate indices.
 
         This function iterates through each defect position, calculates the neighboring atoms' indices,
         and appends them to a list. Finally, it removes duplicate indices and returns the unique set.
 
+        Parameters:
+        -----------
+        add_self_index : bool, optional
+            If True, includes the defect's own index in the list (default: True).
+
         Returns:
-        -------
+        --------
         list
             A list of unique indices of neighboring atoms to the defect.
         """
 
-        all_neighbor_indices = []  # List to store all the neighbor indices for each defect position
+        all_neighbor_indices = []  # List to store all neighbor indices for each defect position
 
-        # Get the defect positions from the structure
+        # Get defect positions from the structure
         defect_positions = self.get_defect_positions()
 
-        if self.radius == None:
-            raise ValueError(f"It requires a value for the radius parameter to detect the neighbor. By default, the value is set to {self.radius}.")
+        # Ensure radius is set, or provide a default fallback value
+        if self.radius is None:
+            raise ValueError("A value for the radius parameter is required to detect neighbors inside this radius.")
 
-        
-        # Loop through each defect position
+        # Loop through each defect position to find neighbors
         for def_pos in defect_positions:
-            # Get indices, positions, and distances of the neighbors to the current defect position
+            # Get indices of neighbors within the radius from the defect position
             neighbor_indices = find_indexs_positions_distances_symbols_inside_raduis(
-                structure=self.defect_structure,        # The defect structure
-                radius_centered_in_position=def_pos,          # The current defect position
+                structure=self.defect_structure,   
+                radius_centered_in_position=def_pos,  
                 radius=self.radius
-                )["indexs"]
+            )["indexs"]
 
-            # Add the susitutional or interestitial indexes of the defect.
-            index_defect = 0 
-            for pos in self.defect_structure.get_positions():
-                if np.linalg.norm(pos - def_pos) <= self.tolerance:
-                    # Append the indices of neighbors to the list
-                    all_neighbor_indices.append([index_defect])
-                    
-                index_defect+=1
+            if add_self_index:
+                # Identify the defect's own index
+                for index_defect, pos in enumerate(self.defect_structure.get_positions()):
+                    if np.linalg.norm(pos - def_pos) <= self.tolerance:
+                        all_neighbor_indices.append(index_defect)
 
-            # Append the indices of neighbors to the list
-            all_neighbor_indices.append(neighbor_indices)
-        
-        # Flatten the list of lists containing neighbor indices into a single list
-        all_neighbor_indices_concatenate = np.concatenate(all_neighbor_indices).tolist()
+            # Append neighbor indices
+            all_neighbor_indices.extend(neighbor_indices)
 
-        # Create a set to track the elements
-        set_object = set()  
-
-        # Remove duplicates by checking if the item has been seen before
-        # If it hasn't been seen, add it to the result list and mark it as seen
-        neighbor_indices_without_repetation = [item for item in all_neighbor_indices_concatenate if item not in set_object and not set_object.add(item)]
-        
-        # Return the list of unique neighbor indices
-        return neighbor_indices_without_repetation
+        # Remove duplicates using a set
+        return list(set(all_neighbor_indices))
 
     def get_defect_information(self):
 
