@@ -60,9 +60,10 @@ def find_indexs_positions_distances_symbols_inside_raduis(structure: Atoms,
     -------
     tuple
         A tuple containing:
-        - index_inside_radius (list[int]): Indices of atoms inside the radius.
-        - distances_inside_radius (list[float]): Distances to atoms inside the radius.
-        - neighbors_inside_radius (list[np.ndarray]): Positions of the atoms inside the radius.
+        - index inside radius (list[int]): Indices of atoms inside the radius.
+        - distances inside radius (list[float]): Distances to atoms inside the radius.
+        - neighbors inside radius (list[np.ndarray]): Positions of the atoms inside the radius.
+        - chemical symbol inside radius (list[str]): Symbols of the atomos inside the radius
     """
     
     # Calculate distances from the center to all atoms
