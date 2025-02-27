@@ -170,7 +170,42 @@ class StructureComparator:
 
         # Remove duplicates using a set
         return list(set(all_neighbor_indices))
+    
+    def transform_to_fraction_coordinate(self, atom_position: np.ndarray):
+        """
+        Convert a Cartesian coordinate to fractional coordinates.
 
+        Parameters:
+        atom_position (np.ndarray): A 3D vector representing the atomic position in Cartesian coordinates.
+
+        Returns:
+        np.ndarray: The fractional coordinates of the given atomic position.
+        """
+        if len(atom_position) != 3: 
+            raise ValueError("The atomic position must be a 3D vector or list.")
+        
+        # Convert Cartesian coordinates to fractional coordinates using the inverse of the cell matrix
+        return np.dot(np.linalg.inv(self.perfect_structure.cell), atom_position) 
+
+    
+    def transform_cartesian_coordinate(self, atom_position: np.ndarray):
+        """
+        Convert a fractional coordinate to Cartesian coordinates.
+
+        Parameters:
+        atom_position (np.ndarray): A 3D vector representing the atomic position in fractional coordinates.
+
+        Returns:
+        np.ndarray: The Cartesian coordinates of the given atomic position.
+
+        """
+        if len(atom_position) != 3: 
+            raise ValueError("The atomic position must be a 3D vector or list.")
+        
+        # Convert fractional coordinates to Cartesian coordinates using the cell matrix
+        return np.dot(self.defect_structure.cell, atom_position)
+
+    
     def get_defect_information(self):
 
         """
@@ -184,13 +219,13 @@ class StructureComparator:
 
         # Check for single defect cases
         if len(vacancies) == 1 and len(interstitials) == 0 and len(substitutions) == 0:
-            print(f'Vacancy: {vacancies[0][0]}, in the position: {vacancies[0][1]}')
+            print(f'Vacancy: {vacancies[0][0]}, in the position: {self.transform_to_fraction_coordinate(vacancies[0][1])}')
 
         elif len(vacancies) == 0 and len(interstitials) == 1 and len(substitutions) == 0:
-            print(f'Interstitial: {interstitials[0][0]}, in the position: {interstitials[0][1]}')
+            print(f'Interstitial: {interstitials[0][0]}, in the position: {self.transform_to_fraction_coordinate(interstitials[0][1])}')
 
         elif len(vacancies) == 0 and len(interstitials) == 0 and len(substitutions) == 1:
-            print(f'Substitution: {substitutions[0][0]} replaced by {substitutions[0][1]}, in the position: {substitutions[0][2]}')
+            print(f'Substitution: {substitutions[0][0]} replaced by {substitutions[0][1]}, in the position: {self.transform_to_fraction_coordinate(substitutions[0][2])}')
 
         # Complex defects
         else:
@@ -198,14 +233,14 @@ class StructureComparator:
             if len(vacancies) != 0:
                 print('Vacancy:' if len(vacancies) == 1 else 'Vacancies:')
                 for vacancy in vacancies:
-                    print(f'{vacancy[0]} at {vacancy[1]}')
+                    print(f'{vacancy[0]} at {self.transform_to_fraction_coordinate(vacancy[1])}')
 
             if len(interstitials) != 0:
                 print('Interstitial:' if len(interstitials) == 1 else 'Interstitials:')
                 for interstitial in interstitials:
-                    print(f'{interstitial[0]} at {interstitial[1]}')
+                    print(f'{interstitial[0]} at {self.transform_to_fraction_coordinate(interstitial[1])}')
 
             if len(substitutions) != 0:
                 print('Substitution:' if len(substitutions) == 1 else 'Substitutions:')
                 for substitution in substitutions:
-                    print(f'{substitution[0]} replaced by {substitution[1]} at {substitution[2]}')
+                    print(f'{substitution[0]} replaced by {substitution[1]} at {self.transform_to_fraction_coordinate(substitution[2])}')
