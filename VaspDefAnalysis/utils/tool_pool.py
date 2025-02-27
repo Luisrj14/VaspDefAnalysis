@@ -136,35 +136,50 @@ class SIUnitConverter:
             else:
                 return "Invalid SI prefix." 
 
-def fin_index_position_symbol_of_most_center_atom(structure: Atoms) -> tuple[int, np.ndarray]:
+def find_index_position_symbol_of_most_center_atom(structure: Atoms, species: str = None) -> dict:
     """
-    Find the index and position of the atom closest to the centroid of the structure.
+    Find the index, position, and symbol of the atom closest to the centroid of the structure.
+    Optionally, limit the search to a specific atomic species.
 
     Parameters:
     ----------
     structure : Atoms
         An ASE Atoms object representing the atomic structure.
+    species : str, optional
+        The chemical symbol of the atomic species to consider. If None, considers all atoms.
 
     Returns:
     -------
-    tuple[int, np.ndarray]
-        The index and position (numpy array) of the atom closest to the centroid.
+    dict
+        A dictionary containing the index, position, and symbol of the closest atom.
     """
-    # Get atomic positions
+    # Get atomic positions and symbols
     positions = structure.get_scaled_positions()
+    symbols = np.array(structure.get_chemical_symbols())
     
     # Compute centroid (geometric center)
     centroid = np.mean(positions, axis=0)
     
-    # Compute distances from centroid
-    distances = np.linalg.norm(positions - centroid, axis=1)
-
-    # Find the index of the closest atom
-    index = np.argmin(distances)
-
-    # Central atom infomation
-    certer_atom_infoamtion = {"index":index, "position":structure.get_positions()[index],"symbol":structure.get_chemical_symbols()[index]}
-    return certer_atom_infoamtion
+    # Filter indices for the selected species
+    if species is not None:
+        indices = np.where(symbols == species)[0]
+        if len(indices) == 0:
+            raise ValueError(f"No atoms of species '{species}' found in the structure.")
+    else:
+        indices = np.arange(len(structure))
+    
+    # Compute distances from centroid for the selected indices
+    distances = np.linalg.norm(positions[indices] - centroid, axis=1)
+    
+    # Find the index of the closest atom among the selected species
+    min_index = indices[np.argmin(distances)]
+    
+    # Return central atom information
+    return {
+        "index": min_index,
+        "position": structure.get_positions()[min_index],
+        "symbol": symbols[min_index]
+    }
 
 #def find_indexs_positions_distances_symbols_to_neighbors(structure: Atoms, 
 #                                                        neighbors_to_position: np.ndarray, 
