@@ -78,7 +78,8 @@ class Makedefect:
         Atoms object with a vacancy.
         """
         defect_structure = self.atoms.copy()
-        print(defect_structure)
+        if index >= len(defect_structure):
+            raise IndexError("One or both atom indices are out of range.")
         del defect_structure[index]
         return defect_structure
 
@@ -117,29 +118,39 @@ class Makedefect:
         Atoms object with a substitutional defect.
         """
         defect_structure = self.atoms.copy()
+        if index >= len(defect_structure):
+            raise IndexError("One or both atom indices are out of range.")
         defect_structure[index].symbol = new_element
         return defect_structure
     
-    def make_divacancy(self, indices: list) -> Atoms:
+    def make_divacancy(self, index1: int, index2: int) -> Atoms:
         """
         Create a divacancy by removing two atoms at specified indices.
-        
+
         Parameters:
         ----------
-        indices : list of int
-            List of two indices of atoms to be removed.
-        
-        Return:
-        ------
-        Atoms object with a divacancy.
+        index1 : int
+            Index of the first atom to be removed.
+        index2 : int
+            Index of the second atom to be removed.
+
+        Returns:
+        -------
+        Atoms
+            A new Atoms object with the divacancy created.
         """
-        if len(indices) != 2:
-            raise ValueError("Divacancy requires exactly two atom indices.")
         
+        indices = [index1, index2] 
         defect_structure = self.atoms.copy()
-        for index in sorted(indices, reverse=True):  # Reverse to avoid index shifting
-            del defect_structure[index]
+        print(len(defect_structure))
+        # Ensure indices are valid BEFORE modifying the structure
+        if int(index1) >= len(defect_structure) or int(index2) >= len(defect_structure):
+            raise ValueError("One or both indices are out of range.")
         
+        # Ensure deletion order (sorted(indices, reverse=True))
+        for index in sorted(indices, reverse=True):
+            del defect_structure[index]  
+
         return defect_structure
 
     def make_antisite(self, index1: int, index2: int) -> Atoms:
@@ -158,6 +169,8 @@ class Makedefect:
         Atoms object with an antisite defect.
         """
         defect_structure = self.atoms.copy()
+        if index1 >= len(defect_structure) or index2 >= len(defect_structure):
+            raise IndexError("One or both atom indices are out of range.")
         element1 = defect_structure[index1].symbol
         element2 = defect_structure[index2].symbol
 
@@ -166,7 +179,7 @@ class Makedefect:
 
         return defect_structure
 
-    def make_dimero(self, indices: list, new_element: str) -> Atoms:
+    def make_dimero(self,  index1: int, index2: int,element:str) -> Atoms:
         """
         Create a double substitutional defect (like a dimer).
         
@@ -181,12 +194,14 @@ class Makedefect:
         ------
         Atoms object with a double substitutional defect.
         """
+
+        indices = [index1,index2]
         if len(indices) != 2:
             raise ValueError("Double substitution requires exactly two atom indices.")
 
         defect_structure = self.atoms.copy()
         for index in indices:
-            defect_structure[index].symbol = new_element
+            defect_structure[index].symbol = element
 
         return defect_structure
     
@@ -210,6 +225,9 @@ class Makedefect:
             `antisite_index` has been swapped and the atom at `vacancy_index` has been removed.
         """
         defect_structure = self.atoms.copy()  # Create a copy of the atoms in the original structure
+
+        if int(antisite_index) >= len(defect_structure) or int(vacancy_index) >= len(defect_structure):
+            raise ValueError("One or both indices are out of range.")
         element1 = defect_structure[antisite_index].symbol  # Get the symbol of the atom at antisite_index
         element2 = defect_structure[vacancy_index].symbol  # Get the symbol of the atom at vacancy_index
         
