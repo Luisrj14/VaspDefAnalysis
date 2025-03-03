@@ -343,7 +343,7 @@ class PlotLocalizedStates:
              It is by default  [0.0, 0.0, 0.0]
 
         **plot_setting:
-            Additional keyword arguments for customizing the plot appearance and IPR consideration.
+            Additional keyword arguments for customizing the plot appearance.
         
         Returns:
         -------
