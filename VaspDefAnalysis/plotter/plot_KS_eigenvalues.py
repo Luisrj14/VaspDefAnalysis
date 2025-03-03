@@ -218,6 +218,10 @@ class PlotKohnShamEigenvalue:
                 
         # Use classified eigenvalues for better organization
         classified_eigenvalues = self.classify_eigenvalues_to_occupancy()
+
+        # If the energies are referenced to energy fermi
+        y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
+        y_value_CBM = CBM - VBM if fermi_energy_reference else CBM
         
         # Number of subplots needed (one for each spin)
         num_spins = len(classified_eigenvalues)  
@@ -315,10 +319,6 @@ class PlotKohnShamEigenvalue:
                         title,
                         fontdict= plot_settings["fontdict_title"]
                         )
-            
-            # If the energies are referenced to energy fermi
-            y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
-            y_value_CBM = CBM - VBM if fermi_energy_reference else CBM
             
             # Set the y-axis limit if provided
             if y_limit == "(VBM-1.5,CBM+1.5)":

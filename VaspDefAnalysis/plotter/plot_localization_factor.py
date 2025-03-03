@@ -139,6 +139,10 @@ class PlotLocalizedStates:
         # Handle plot settings
         plot_settings = self.plot_setting(**plot_settings)
 
+        # If the energies are referenced to energy fermi
+        y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
+        y_value_CBM = CBM - VBM if fermi_energy_reference else CBM
+
         # Determine layout and create subplots
         num_spins = len(self.eigenvalues_dict)
         layout = plot_settings["layout"]
@@ -185,10 +189,6 @@ class PlotLocalizedStates:
             title = plot_settings["title_names"].get("up" if spin_key == 'spin 1' else "down")
             ax.set_title(title, fontdict=plot_settings["fontdict_title"])
 
-            # If the energies are referenced to energy fermi
-            y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
-            y_value_CBM = CBM - VBM if fermi_energy_reference else CBM
-            
             # Default y-limit
             if y_limit == "(VBM-1.5,CBM+1.5)":
                 y_limit = (y_value_VBM - 1.5, y_value_CBM + 1.5)
