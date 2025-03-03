@@ -86,7 +86,6 @@ class PlotLocalizedStates:
             "label_size": 12,
             "figsize": 6,
             "layout": "vertical",
-            "IPR":{"gvec": None, "Cg":None, "ngrid":None,"rescale":None, "kr_phase":False, "r0":[0.0, 0.0, 0.0]}
         }
         
         # Validate keys
@@ -299,6 +298,7 @@ class PlotLocalizedStates:
                               gamma_half:str='x',
                               omp_num_threads:int=1,
                               norm:bool=True,
+                              gvec=None, Cg=None,ngrid=None,rescale=None,kr_phase=False, r0=[0.0, 0.0, 0.0],
                               **plot_setting
                               ):
         
@@ -331,6 +331,16 @@ class PlotLocalizedStates:
             The number of threads to use for parallel processing (default is `1`).
         norm : normalized Cg?
             It is by default  `True`
+        gvec : the G-vectors correspond to the plane-wave coefficients
+             It is by default  `None`
+        Cg : the plane-wave coefficients. If None, read from WAVECAR
+             It is by default  `None`
+        ngrid : the FFT grid size
+             It is by default  `None`
+        kr_phase : whether or not to multiply the exp(ikr) phase
+             It is by default  `None`
+        r0 : shift of the kr-phase to get full wfc other than primitive cell
+             It is by default  [0.0, 0.0, 0.0]
 
         **plot_setting:
             Additional keyword arguments for customizing the plot appearance and IPR consideration.
@@ -362,7 +372,7 @@ class PlotLocalizedStates:
                                                                            lgamma=lgamma,
                                                                            gamma_half=gamma_half,
                                                                            omp_num_threads=omp_num_threads,
-                                                                           norm=norm,**plot_setting)
+                                                                           norm=norm,gvec=gvec, Cg=Cg,ngrid=ngrid,rescale=rescale,kr_phase=kr_phase, r0=r0)
         
         # Create an instance of PlotLocalizedStates class 
         plotter = PlotLocalizedStates(kpoints_dict=kpoint_values_dic,eigenvalues_dict=Kohn_Sham_eigenvalues_dic,localized_paramter_dict=ipr_values_dic)
