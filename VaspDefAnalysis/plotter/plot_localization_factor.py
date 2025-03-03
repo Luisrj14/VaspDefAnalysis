@@ -86,6 +86,8 @@ class PlotLocalizedStates:
             "label_size": 12,
             "figsize": 6,
             "layout": "vertical",
+            "index_text_settings":{"fontsize":8},
+            "band_index_expand_between_VBM_CBM": 0.0 
         }
         
         # Validate keys
@@ -111,8 +113,10 @@ class PlotLocalizedStates:
         y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
         fermi_energy_reference: bool = True,
         show_fill_up: bool = True,
+        show_band_index = False,
         **plot_settings
         ) -> plt.Figure:
+        
         """
         Plot localized states for spins with customization.
 
@@ -136,6 +140,7 @@ class PlotLocalizedStates:
         plt.Figure
             The generated figure object.
         """
+
         # Handle plot settings
         plot_settings = self.plot_setting(**plot_settings)
 
@@ -155,6 +160,13 @@ class PlotLocalizedStates:
         spin_idx = 0
         for (spin_key, kpoint_keys), (spin_key_, kpoint_keys_) in zip(self.eigenvalues_dict.items(), self.localized_paramter_dict.items()):
             ax = axes[spin_idx]
+            
+            # Default y-limit
+            if y_limit == "(VBM-1.5,CBM+1.5)":
+                y_limit = (y_value_VBM - 1.5, y_value_CBM + 1.5)
+                ax.set_ylim(y_limit)
+            else: 
+                ax.set_ylim(y_limit)
 
             # Generate x-axis labels
             kpt_coords = [self.kpoints_dict[spin_key][kpoint_key] for kpoint_key in kpoint_keys]
@@ -174,6 +186,21 @@ class PlotLocalizedStates:
                 # Scatter plot
                 scatter = ax.scatter([x_values[kpoint_idx]] * len(eigenvalues), eigenvalues, c=localized_values, **plot_settings["scatter_settings"])  
 
+                if show_band_index: 
+                    band_index = 1
+                    # Add text labels for each eigenvalue
+                    for eig in eigenvalues:
+                        if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"]:
+                            # If band_index is even, move text to the left; if odd, move it to the right
+                            if band_index % 2 == 0:
+                                x_text = x_values[kpoint_idx] -0.1 # Move left
+                                ha_text = 'right'  
+                            else:
+                                x_text = x_values[kpoint_idx] + 0.1 # Move right
+                                ha_text = 'left'  
+                            ax.text(x_text, eig, f"{band_index}", ha=ha_text,**plot_settings["index_text_settings"])
+                        band_index += 1 
+
                 kpoint_idx += 1 
 
             # Scatter plot setting 
@@ -187,13 +214,6 @@ class PlotLocalizedStates:
             ax.set_ylabel(plot_settings["ylabel"], size=plot_settings["label_size"])
             title = plot_settings["title_names"].get("up" if spin_key == 'spin 1' else "down")
             ax.set_title(title, fontdict=plot_settings["fontdict_title"])
-
-            # Default y-limit
-            if y_limit == "(VBM-1.5,CBM+1.5)":
-                y_limit = (y_value_VBM - 1.5, y_value_CBM + 1.5)
-                ax.set_ylim(y_limit)
-            else: 
-                ax.set_ylim(y_limit)
 
             # Plot VBM/CBM lines and fill regions
             if show_fill_up:
@@ -221,6 +241,7 @@ class PlotLocalizedStates:
                                y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
                                fermi_energy_reference: bool = True,
                                show_fill_up: bool = True,
+                               show_band_index = False,
                                tolerance=2e-1,
                                norm:bool=True,
                                **plot_settings
@@ -281,7 +302,12 @@ class PlotLocalizedStates:
 
         # Create an instance of PlotLocalizedStates class 
         plotter = PlotLocalizedStates(kpoints_dict=kpoint_values_dic,eigenvalues_dict=Kohn_Sham_eigenvalues_dic,localized_paramter_dict=localization_factor_dic_using_IOWs)
-        fig = plotter.plot_localized_state(VBM=VBM,CBM=CBM,y_limit=y_limit,fermi_energy_reference=fermi_energy_reference,show_fill_up=show_fill_up,colorbar_label="IOWs",**plot_settings)
+        fig = plotter.plot_localized_state(VBM=VBM,CBM=CBM,
+                                           y_limit=y_limit,
+                                           fermi_energy_reference=fermi_energy_reference,
+                                           show_fill_up=show_fill_up,
+                                           show_band_index=show_band_index,
+                                           colorbar_label="IOWs",**plot_settings)
         return fig
     
     @staticmethod
@@ -292,6 +318,7 @@ class PlotLocalizedStates:
                               y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
                               fermi_energy_reference: bool = True,
                               show_fill_up: bool = True,
+                              show_band_index = False,
                               lsorbit:bool=False, 
                               lgamma:bool=False,
                               gamma_half:str='x',
@@ -375,7 +402,13 @@ class PlotLocalizedStates:
         
         # Create an instance of PlotLocalizedStates class 
         plotter = PlotLocalizedStates(kpoints_dict=kpoint_values_dic,eigenvalues_dict=Kohn_Sham_eigenvalues_dic,localized_paramter_dict=ipr_values_dic)
-        fig = plotter.plot_localized_state(VBM=VBM,CBM=CBM,y_limit=y_limit,fermi_energy_reference=fermi_energy_reference,show_fill_up=show_fill_up,colorbar_label="IPRs",**plot_setting)
+        fig = plotter.plot_localized_state(VBM=VBM,CBM=CBM,
+                                           y_limit=y_limit,
+                                           fermi_energy_reference=fermi_energy_reference,
+                                           show_fill_up=show_fill_up,
+                                           show_band_index = show_band_index,
+                                           colorbar_label="IPRs",
+                                           **plot_setting)
         return fig
         
 
