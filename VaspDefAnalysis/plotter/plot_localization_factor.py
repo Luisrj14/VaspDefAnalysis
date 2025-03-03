@@ -163,21 +163,20 @@ class PlotLocalizedStates:
 
             # Save dat for the different kpoints for scatter plot
             min_KS, max_KS = [], []
-            x_values_list, eigenvalues_list, localized_values_list = [], [], []
 
             kpoint_idx = 0 
             for (kpoint_key, eigenvalues), (kpoint_key_, localized_values) in zip(kpoint_keys.items(), kpoint_keys_.items()):
                 if fermi_energy_reference:
                     eigenvalues = list(np.array(eigenvalues)- VBM)
-                eigenvalues_list.extend(eigenvalues)
-                x_values_list.extend([x_values[kpoint_idx]] * len(eigenvalues))
-                localized_values_list.extend(localized_values)
                 min_KS.append(min(eigenvalues))
                 max_KS.append(max(eigenvalues))
+                
+                # Scatter plot
+                scatter = ax.scatter([x_values[kpoint_idx]] * len(eigenvalues), eigenvalues, c=localized_values, **plot_settings["scatter_settings"])  
+
                 kpoint_idx += 1 
 
-            # Scatter plot
-            scatter = ax.scatter(x_values_list, eigenvalues_list, c=localized_values_list, **plot_settings["scatter_settings"])  
+            # Scatter plot setting 
             cbar = plt.colorbar(scatter, ax=ax, label=plot_settings["colorbar_label"])
             cbar.set_label(label=plot_settings["colorbar_label"], fontsize=plot_settings["label_size"])
 
