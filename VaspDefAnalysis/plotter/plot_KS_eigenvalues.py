@@ -140,7 +140,7 @@ class PlotKohnShamEigenvalue:
         "ylabel":"Eigenvalues [eV]",
         "label_size": 12,
         "legend_loc": "upper right",
-        "figsize": 6,   # horizontal (6,6*2), vertical (6*2,6)
+        "figsize":(6,12),
         "layout": "vertical"
         }
         
@@ -235,7 +235,7 @@ class PlotKohnShamEigenvalue:
             raise ValueError("Invalid layout. Choose 'horizontal' or 'vertical'.")
         
         # Create subplots
-        fig, axes = plt.subplots(rows, cols, figsize=(plot_settings["figsize"] * cols,plot_settings["figsize"] * rows))
+        fig, axes = plt.subplots(rows, cols, figsize=plot_settings["figsize"])
         
         # If only one subplot, axes will not be an array, so handle it accordingly
         if num_spins == 1:

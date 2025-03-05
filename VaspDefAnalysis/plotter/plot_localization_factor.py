@@ -84,10 +84,10 @@ class PlotLocalizedStates:
             "ylabel": "Eigenvalues [eV]",
             "colorbar_label": "Location factor",
             "label_size": 12,
-            "figsize": 6,
-            "layout": "vertical",
-            "index_text_settings":{"fontsize":8},
-            "band_index_expand_between_VBM_CBM": 0.0 
+            "figsize": (12,6),
+            "layout": "horizontal",
+            "index_text_settings":{"fontsize":10},
+            "band_index_expand_between_VBM_CBM": (0.0,0.5)
         }
         
         # Validate keys
@@ -150,9 +150,17 @@ class PlotLocalizedStates:
 
         # Determine layout and create subplots
         num_spins = len(self.eigenvalues_dict)
-        layout = plot_settings["layout"]
-        rows, cols = (1, num_spins) if layout == "horizontal" else (num_spins, 1)
-        fig, axes = plt.subplots(rows, cols, figsize=(plot_settings["figsize"] * cols, plot_settings["figsize"] * rows))
+        
+        # Determine the number of rows and columns based on layout
+        if plot_settings["layout"] == "horizontal":
+            rows, cols = 1, num_spins
+        elif plot_settings["layout"] == "vertical":
+            rows, cols = num_spins, 1
+        else:
+            raise ValueError("Invalid layout. Choose 'horizontal' or 'vertical'.")
+
+        # Create subplots
+        fig, axes = plt.subplots(rows, cols, figsize=plot_settings["figsize"])
         
         # Ensure axes is always iterable
         axes = [axes] if num_spins == 1 else axes
@@ -190,7 +198,7 @@ class PlotLocalizedStates:
                     band_index = 1
                     # Add text labels for each eigenvalue
                     for eig in eigenvalues:
-                        if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"]:
+                        if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"][0] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"][1]:
                             # If band_index is even, move text to the left; if odd, move it to the right
                             if band_index % 2 == 0:
                                 x_text = x_values[kpoint_idx] -0.1 # Move left
