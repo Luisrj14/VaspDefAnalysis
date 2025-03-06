@@ -92,7 +92,7 @@ class PlotKohnShamEigenvalue:
             ...
         }
         """
-        classified_eigenvalues = classify_eigenvalues(eigenvalues_dict=self.eigenvalues_dict,occupancy_dict=self.occupancy_dict)
+        classified_eigenvalues,classified_eigenvalues_band_index = classify_eigenvalues(eigenvalues_dict=self.eigenvalues_dict,occupancy_dict=self.occupancy_dict)
 
         return classified_eigenvalues
 

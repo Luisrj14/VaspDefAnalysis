@@ -94,20 +94,33 @@ def classify_eigenvalues(eigenvalues_dict:dict,
         }
         """
         classified_eigenvalues = {}
+        classified_eigenvalues_band_index = {}
         for spin_key, eigenvalues in eigenvalues_dict.items():
             classified_eigenvalues[spin_key] = {}
+            classified_eigenvalues_band_index[spin_key]= {}
             for kpoint_key, eigenval_list in eigenvalues.items():
                 classified_eigenvalues[spin_key][kpoint_key] = {
                     "occupied": [],
                     "unoccupied": [],
                     "partial": []
                 }
+                
+                classified_eigenvalues_band_index[spin_key][kpoint_key] = {
+                    "occupied": [],
+                    "unoccupied": [],
+                    "partial": []
+                }
+                band_index = 1 
                 occupancy_list = occupancy_dict[spin_key].get(kpoint_key, [])
                 for eigenval, occupancy in zip(eigenval_list, occupancy_list):
                     if occupancy >= 0.9:
                         classified_eigenvalues[spin_key][kpoint_key]["occupied"].append(eigenval)
+                        classified_eigenvalues_band_index[spin_key][kpoint_key]["occupied"].append(band_index)
                     elif occupancy <= 0.1:
                         classified_eigenvalues[spin_key][kpoint_key]["unoccupied"].append(eigenval)
+                        classified_eigenvalues_band_index[spin_key][kpoint_key]["unoccupied"].append(band_index)
                     else:
                         classified_eigenvalues[spin_key][kpoint_key]["partial"].append(eigenval)
-        return classified_eigenvalues
+                        classified_eigenvalues_band_index[spin_key][kpoint_key]["partial"].append(band_index)
+                    band_index +=1
+        return classified_eigenvalues,classified_eigenvalues_band_index
