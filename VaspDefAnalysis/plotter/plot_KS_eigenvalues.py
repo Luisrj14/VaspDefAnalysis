@@ -141,7 +141,9 @@ class PlotKohnShamEigenvalue:
         "label_size": 12,
         "legend_loc": "upper right",
         "figsize":(12,6),
-        "layout": "vertical"
+        "layout": "horizontal",
+        "index_text_settings":{"fontsize":10},
+        "band_index_expand_between_VBM_CBM": (0.0,0.5)
         }
         
         # Validate keys
@@ -167,6 +169,7 @@ class PlotKohnShamEigenvalue:
                          y_limit:tuple|None="(VBM-1.5,CBM+1.5)",
                          fermi_energy_reference:bool = True,
                          show_fill_up:bool=True,
+                         show_band_index=True,
                          **plot_setting
                          )-> plt.Figure:
         
@@ -244,7 +247,14 @@ class PlotKohnShamEigenvalue:
         for spin_idx, (spin_key, kpoint_keys) in enumerate(classified_eigenvalues.items()):
 
             # Get the corresponding subplot for this spin
-            ax = axes[spin_idx] 
+            ax = axes[spin_idx]
+
+            # Set the y-axis limit if provided
+            if y_limit == "(VBM-1.5,CBM+1.5)":
+                y_limit = (y_value_VBM - 1.5,y_value_CBM +1.5)
+                ax.set_ylim(y_limit)
+            else:
+                ax.set_ylim(y_limit) 
 
             # Extract k-point coordinates for x-axis labels
             kpt_coords = [self.kpoints_dict[spin_key][kpoint_key] for kpoint_key in kpoint_keys]
@@ -291,6 +301,23 @@ class PlotKohnShamEigenvalue:
                     ax.scatter([x_values[kpoint_idx]] * len(partial_occupied_eigenvalue), partial_occupied_eigenvalue,
                                color=plot_settings["partial_color"], marker=plot_settings["partial_marker"],**plot_settings['scatter_settings'])
                 
+                if show_band_index: 
+                    if fermi_energy_reference:
+                            _eigenvalues = list(np.array(self.eigenvalues_dict[spin_key][kpoint_key])- VBM)
+                    band_index = 1
+                    # Add text labels for each eigenvalue
+                    for eig in _eigenvalues:
+                        if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"][0] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"][1]:
+                            # If band_index is even, move text to the left; if odd, move it to the right
+                            if band_index % 2 == 0:
+                                x_text = x_values[kpoint_idx] 
+                                ha_text = 'right'  
+                            else:
+                                x_text = x_values[kpoint_idx]
+                                ha_text = 'left'  
+                            ax.text(x_text, eig, f"{band_index}", ha=ha_text,**plot_settings["index_text_settings"])
+                        band_index += 1 
+                
             # Add a single legend for each spin plot
             if len(occupied_eigenvalues) > 0:
                 ax.scatter([], [], color=plot_settings["occupied_color"], marker=plot_settings["occupied_marker"], label='Occupied',**plot_settings['scatter_settings'])
@@ -319,13 +346,6 @@ class PlotKohnShamEigenvalue:
                         title,
                         fontdict= plot_settings["fontdict_title"]
                         )
-            
-            # Set the y-axis limit if provided
-            if y_limit == "(VBM-1.5,CBM+1.5)":
-                y_limit = (y_value_VBM - 1.5,y_value_CBM +1.5)
-                ax.set_ylim(y_limit)
-            else:
-                ax.set_ylim(y_limit)
             
             # Optionally plot valence and conduction band lines with custom line styles
             if plot_settings["show_vbm_cbm"]:
