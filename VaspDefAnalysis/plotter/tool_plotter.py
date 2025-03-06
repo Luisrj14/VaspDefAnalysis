@@ -81,12 +81,26 @@ def classify_eigenvalues(eigenvalues_dict:dict,
 
         Example Output
         --------------
+        classified_eigenvalues:
         {
             "spin 1": {
                 "k-point 1": {
                     "occupied": [...],      # List of occupied eigenvalues
                     "unoccupied": [...],    # List of unoccupied eigenvalues
                     "partial": [...]        # List of partially occupied eigenvalues
+                },
+                ...
+            },
+            ...
+        }
+        
+        classified_eigenvalues_band_index:
+        {
+            "spin 1": {
+                "k-point 1": {
+                    "occupied": [...],      # List of index occupied eigenvalues
+                    "unoccupied": [...],    # List of index unoccupied eigenvalues
+                    "partial": [...]        # List of index partially occupied eigenvalues
                 },
                 ...
             },
