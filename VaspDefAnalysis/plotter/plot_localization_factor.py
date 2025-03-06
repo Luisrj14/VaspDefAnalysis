@@ -201,10 +201,10 @@ class PlotLocalizedStates:
                         if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"][0] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"][1]:
                             # If band_index is even, move text to the left; if odd, move it to the right
                             if band_index % 2 == 0:
-                                x_text = x_values[kpoint_idx] -0.1 # Move left
+                                x_text = x_values[kpoint_idx] 
                                 ha_text = 'right'  
                             else:
-                                x_text = x_values[kpoint_idx] + 0.1 # Move right
+                                x_text = x_values[kpoint_idx]
                                 ha_text = 'left'  
                             ax.text(x_text, eig, f"{band_index}", ha=ha_text,**plot_settings["index_text_settings"])
                         band_index += 1 
