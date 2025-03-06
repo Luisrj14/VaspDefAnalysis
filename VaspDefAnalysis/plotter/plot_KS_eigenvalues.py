@@ -140,7 +140,7 @@ class PlotKohnShamEigenvalue:
         "ylabel":"Eigenvalues [eV]",
         "label_size": 12,
         "legend_loc": "upper right",
-        "figsize":(6,12),
+        "figsize":(12,6),
         "layout": "vertical"
         }
         
