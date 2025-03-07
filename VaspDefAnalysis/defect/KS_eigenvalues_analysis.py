@@ -2,6 +2,7 @@ import numpy as np
 
 from VaspDefAnalysis.read_vasp.vasprun_analysis import VaspRunAnalysis
 from VaspDefAnalysis.plotter.tool_plotter import classify_eigenvalues
+
 class EigenvaluesAnalysis:
     def __init__(self, vasprun_path: str):
         self.vasprun_path = vasprun_path
@@ -12,7 +13,7 @@ class EigenvaluesAnalysis:
         
     def classify_eigenvalues(self)-> tuple:
         """
-        Output
+        return
         --------------
         classified_eigenvalues:
         {
@@ -42,16 +43,58 @@ class EigenvaluesAnalysis:
         return classify_eigenvalues(eigenvalues_dict=self.eigenvalues_dict,occupancy_dict=self.occupancy_dict)
 
     
-    def electrinic_state_inf(self):
-        for spin_idx, (spin_key, kpoint_keys) in enumerate(self.classified_eigenvalues.items()):
-            for kpoint_idx, (kpoint_key, bands) in enumerate(kpoint_keys.items()):
-                occupied_eigenvalues = bands["occupied"]
-                unoccupied_eigenvalues = bands["unoccupied"]
-                partial_occupied_eigenvalue = bands["partial"]
+    def get_electorinic_state_band_inf(self):
+        classified_eigenvalues, classified_eigenvalues_band_index = self.classify_eigenvalues() 
 
-                # Add text labels for each eigenvalue
-                for eig in self.eigenvalues_dict[spin_key][kpoint_key]:
-                    pass
-                    
+        if len(classified_eigenvalues) != 2 :
+            raise ValueError("This class EigenvaluesAnalysis just works with polarized spin using VASP")
+
+        nband_up = len(classified_eigenvalues["spin 1"]["kpoint 1"]["occupied"]) + len(classified_eigenvalues["spin 1"]["kpoint 1"]["unoccupied"]) \
+                + len(classified_eigenvalues["spin 1"]["kpoint 1"]["partial"]) 
+        nband_up_occupied = len(classified_eigenvalues["spin 1"]["kpoint 1"]["occupied"])
+        nband_up_unoccupied = len(classified_eigenvalues["spin 1"]["kpoint 1"]["unoccupied"])
+        nband_up_partial = len(classified_eigenvalues["spin 1"]["kpoint 1"]["partial"])
+        if nband_up_partial != 0:
+           print(
+                "There are partially occupied bands. This may indicate a nearly closed state, "
+                "which could be degenerate, allowing electrons to be in both states."
+                )
+        nband_down = len(classified_eigenvalues["spin 2"]["kpoint 1"]["occupied"]) + len(classified_eigenvalues["spin 2"]["kpoint 1"]["unoccupied"]) \
+                + len(classified_eigenvalues["spin 2"]["kpoint 1"]["partial"]) 
+        nband_down_occupied = len(classified_eigenvalues["spin 2"]["kpoint 1"]["occupied"])
+        nband_down_unoccupied = len(classified_eigenvalues["spin 2"]["kpoint 1"]["unoccupied"])
+        nband_down_partial = len(classified_eigenvalues["spin 2"]["kpoint 1"]["partial"])
+        if nband_down_partial != 0:
+           print(
+                "There are partially occupied bands. This may indicate a nearly closed state, "
+                "which could be degenerate, allowing electrons to be in both states."
+                )
+        nelectron = nband_up_occupied + nband_down_occupied +  nband_up_partial + nband_down_partial
+        nkpoints = len(classified_eigenvalues["spin 1"])
+
+        print(f"""
+=================================================================
+Number of bands:                                           
+   NBAND = {nband_up:<10}                                  
+                                                           
+Number of k-points                                         
+   NKPOINT = {nkpoints:<10}                                
+                                                           
+Number of occupied bands (spin up)                         
+   NBAND-OCC-UP = {nband_up_occupied:<10}                  
+                                                           
+Number of unoccupied bands (spin up)                       
+   NBAND-UNOCC-UP = {nband_up_unoccupied:<10}              
+                                                           
+Number of occupied bands (spin down)                       
+   NBAND-OCC-DOWN = {nband_down_occupied:<10}              
+                                                           
+Number of unoccupied bands (spin down)                     
+   NBAND-UNOCC-DOWN = {nband_down_unoccupied:<10}                                                            
+                                                                       
+Number of electrons                                                          
+   NELECTRON = {nelectron:<10}                                                             
+=================================================================
+        """)
 
             
