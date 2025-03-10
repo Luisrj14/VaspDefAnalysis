@@ -56,8 +56,8 @@ class EigenvaluesAnalysis:
         nband_up_partial = len(classified_eigenvalues["spin 1"]["kpoint 1"]["partial"])
         if nband_up_partial != 0:
            print(
-                "There are partially occupied bands. This may indicate a nearly closed state, "
-                "which could be degenerate, allowing electrons to be in both states."
+                "There are partially occupied bands with (spin up)."
+                "This may indicate a nearly closed state, which could be degenerate, allowing electrons to be in both states."
                 )
         nband_down = len(classified_eigenvalues["spin 2"]["kpoint 1"]["occupied"]) + len(classified_eigenvalues["spin 2"]["kpoint 1"]["unoccupied"]) \
                 + len(classified_eigenvalues["spin 2"]["kpoint 1"]["partial"]) 
@@ -65,11 +65,10 @@ class EigenvaluesAnalysis:
         nband_down_unoccupied = len(classified_eigenvalues["spin 2"]["kpoint 1"]["unoccupied"])
         nband_down_partial = len(classified_eigenvalues["spin 2"]["kpoint 1"]["partial"])
         if nband_down_partial != 0:
-           print(
-                "There are partially occupied bands. This may indicate a nearly closed state, "
-                "which could be degenerate, allowing electrons to be in both states."
+           print("There are partially occupied bands with (spin down)."
+               "This may indicate a nearly closed state, which could be degenerate, allowing electrons to be in both states."
                 )
-        nelectron = nband_up_occupied + nband_down_occupied +  nband_up_partial + nband_down_partial
+        nelectron = nband_up_occupied + nband_down_occupied + int((nband_down_partial+ nband_up_partial)/2)
         nkpoints = len(classified_eigenvalues["spin 1"])
 
         electronic_state_band_info= f"""
@@ -84,13 +83,19 @@ Number of occupied bands (spin up)
    NBAND-OCC-UP = {nband_up_occupied:<10}                  
                                                            
 Number of unoccupied bands (spin up)                       
-   NBAND-UNOCC-UP = {nband_up_unoccupied:<10}              
+   NBAND-UNOCC-UP = {nband_up_unoccupied:<10}
+
+Number of partial ccupied bands (spin up)                       
+    NBAND-PAR-OCC-UP = {nband_up_partial:<10}    
                                                            
 Number of occupied bands (spin down)                       
    NBAND-OCC-DOWN = {nband_down_occupied:<10}              
                                                            
 Number of unoccupied bands (spin down)                     
-   NBAND-UNOCC-DOWN = {nband_down_unoccupied:<10}                                                            
+   NBAND-UNOCC-DOWN = {nband_down_unoccupied:<10}   
+
+Number of partial ccupied bands (spin down)                       
+   NBAND-PAR-OCC-DOWN = {nband_down_partial:<10}                                                          
                                                                        
 Number of electrons                                                          
    NELECTRON = {nelectron:<10}                                                             
