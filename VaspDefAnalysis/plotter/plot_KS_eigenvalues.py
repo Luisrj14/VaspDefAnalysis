@@ -169,7 +169,7 @@ class PlotKohnShamEigenvalue:
                          y_limit:tuple|None="(VBM-1.5,CBM+1.5)",
                          fermi_energy_reference:bool = True,
                          show_fill_up:bool=True,
-                         show_band_index=True,
+                         show_band_index:bool=False,
                          **plot_setting
                          )-> plt.Figure:
         
@@ -384,6 +384,7 @@ class PlotKohnShamEigenvalue:
                                 y_limit:tuple|None="(VBM-1.5,CBM+1.5)",
                                 fermi_energy_reference:bool = True,
                                 show_fill_up:bool = True,
+                                show_band_index:bool = False,
                                 **plot_setting
                                 )-> plt.Figure:
         """
@@ -419,5 +420,5 @@ class PlotKohnShamEigenvalue:
 
         # Create an instance of PlotEigenvalue class 
         plotter = PlotKohnShamEigenvalue(eigenvalues_dict, occupancy_dict, kpoints_dict)
-        fig = plotter.plot_KS_eigenvalues(VBM=VBM,CBM=CBM,y_limit=y_limit,fermi_energy_reference=fermi_energy_reference,show_fill_up=show_fill_up,**plot_setting)
+        fig = plotter.plot_KS_eigenvalues(VBM=VBM,CBM=CBM,y_limit=y_limit,fermi_energy_reference=fermi_energy_reference,show_fill_up=show_fill_up,show_band_index=show_band_index,**plot_setting)
         return fig

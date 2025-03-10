@@ -326,7 +326,7 @@ class PlotLocalizedStates:
                               y_limit: tuple | None ="(VBM-1.5,CBM+1.5)",
                               fermi_energy_reference: bool = True,
                               show_fill_up: bool = True,
-                              show_band_index = False,
+                              show_band_index:bool = False,
                               lsorbit:bool=False, 
                               lgamma:bool=False,
                               gamma_half:str='x',
