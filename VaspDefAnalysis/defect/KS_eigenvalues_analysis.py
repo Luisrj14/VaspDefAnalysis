@@ -43,7 +43,7 @@ class EigenvaluesAnalysis:
         return classify_eigenvalues(eigenvalues_dict=self.eigenvalues_dict,occupancy_dict=self.occupancy_dict)
 
     
-    def get_electorinic_state_band_inf(self):
+    def get_electorinic_state_band_inf(self)-> str:
         classified_eigenvalues, classified_eigenvalues_band_index = self.classify_eigenvalues() 
 
         if len(classified_eigenvalues) != 2 :
@@ -72,9 +72,9 @@ class EigenvaluesAnalysis:
         nelectron = nband_up_occupied + nband_down_occupied +  nband_up_partial + nband_down_partial
         nkpoints = len(classified_eigenvalues["spin 1"])
 
-        print(f"""
+        electronic_state_band_info= f"""
 =================================================================
-Number of bands:                                           
+Number of bands (For each spin):                                           
    NBAND = {nband_up:<10}                                  
                                                            
 Number of k-points                                         
@@ -95,6 +95,6 @@ Number of unoccupied bands (spin down)
 Number of electrons                                                          
    NELECTRON = {nelectron:<10}                                                             
 =================================================================
-        """)
-
+        """
+        return electronic_state_band_info
             
