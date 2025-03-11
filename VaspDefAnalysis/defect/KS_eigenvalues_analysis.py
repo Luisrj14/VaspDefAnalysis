@@ -85,7 +85,7 @@ Number of occupied bands (spin up)
 Number of unoccupied bands (spin up)                       
    NBAND-UNOCC-UP = {nband_up_unoccupied:<10}
 
-Number of partial ccupied bands (spin up)                       
+Number of partial occupied bands (spin up)                       
     NBAND-PAR-OCC-UP = {nband_up_partial:<10}    
                                                            
 Number of occupied bands (spin down)                       
@@ -94,7 +94,7 @@ Number of occupied bands (spin down)
 Number of unoccupied bands (spin down)                     
    NBAND-UNOCC-DOWN = {nband_down_unoccupied:<10}   
 
-Number of partial ccupied bands (spin down)                       
+Number of partial occupied bands (spin down)                       
    NBAND-PAR-OCC-DOWN = {nband_down_partial:<10}                                                          
                                                                        
 Number of electrons                                                          
