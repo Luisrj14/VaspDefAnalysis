@@ -68,7 +68,7 @@ class EigenvaluesAnalysis:
            print("There are partially occupied bands with (spin down)."
                "This may indicate a nearly closed state, which could be degenerate, allowing electrons to be in both states."
                 )
-        nelectron = nband_up_occupied + nband_down_occupied + int((nband_down_partial+ nband_up_partial)/2)
+        nelectron = nband_up_occupied + nband_down_occupied + round((nband_down_partial+ nband_up_partial)/2)
         nkpoints = len(classified_eigenvalues["spin 1"])
 
         electronic_state_band_info= f"""
