@@ -45,8 +45,8 @@ class ConvergencePlot(ConvergenceTools):
         default_settings = {
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
             "label_size": 10,
-            "x_y_label_size": 12,
-            "figsize": (6, 5),
+            "x_y_label_size": 16,
+            "figsize": (8, 6),
             "curve_settings":{"color":"black","marker": ">"},
             "criterion_settings": {"linestyle": ":", "color": "red"},
             "legend_loc": "upper right",
