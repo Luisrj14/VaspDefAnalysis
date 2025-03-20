@@ -83,7 +83,7 @@ class PlotLocalizedStates:
             "xlabel": "K-Points",
             "ylabel": "Eigenvalues [eV]",
             "colorbar_label": "Location factor",
-            "label_size": 12,
+            "label_size": 16,
             "figsize":(8,6),
             "layout": "horizontal",
             "index_text_settings":{"fontsize":10},

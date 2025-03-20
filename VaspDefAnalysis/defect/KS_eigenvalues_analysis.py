@@ -102,4 +102,11 @@ Number of electrons
 =================================================================
         """
         return electronic_state_band_info
+    
+    def get_energy_iband(self,ispin:int,ikpoint:list,ibands:int|list):
+        
+        for  spin_key in self.eigenvalues_dict:
+            pass
+
+    
             

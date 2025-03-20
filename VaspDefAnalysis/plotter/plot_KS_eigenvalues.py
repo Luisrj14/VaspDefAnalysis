@@ -138,7 +138,7 @@ class PlotKohnShamEigenvalue:
         "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 14},
         "xlabel":"K-Points",
         "ylabel":"Eigenvalues [eV]",
-        "label_size": 12,
+        "label_size": 16,
         "legend_loc": "upper right",
         "figsize":(8,6),
         "layout": "horizontal",
