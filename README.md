@@ -20,3 +20,8 @@ VaspDefAnalysis is a specialized toolkit designed to facilitate the analysis of 
 
 - **Academic Use:**
   - Support research and education in solid-state physics and materials science
+
+## Contact info
+
+J.L.R Arteta 
+luisrj@uio.no 
