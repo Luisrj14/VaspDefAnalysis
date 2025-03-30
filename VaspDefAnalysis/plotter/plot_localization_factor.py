@@ -114,6 +114,7 @@ class PlotLocalizedStates:
         fermi_energy_reference: bool = True,
         show_fill_up: bool = True,
         show_band_index = False,
+        band_indix_label_limit=None,
         **plot_settings
         ) -> plt.Figure:
         
@@ -147,6 +148,9 @@ class PlotLocalizedStates:
         # If the energies are referenced to energy fermi
         y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
         y_value_CBM = CBM - VBM if fermi_energy_reference else CBM
+
+        if band_indix_label_limit == None:
+            band_indix_label_limit = (y_value_VBM,y_value_CBM) 
 
         # Determine layout and create subplots
         num_spins = len(self.eigenvalues_dict)
@@ -198,7 +202,7 @@ class PlotLocalizedStates:
                     band_index = 1
                     # Add text labels for each eigenvalue
                     for eig in eigenvalues:
-                        if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"][0] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"][1]:
+                        if  band_indix_label_limit[0] <= eig <= band_indix_label_limit[1]:
                             # If band_index is even, move text to the left; if odd, move it to the right
                             if band_index % 2 == 0:
                                 x_text = x_values[kpoint_idx] 
@@ -206,9 +210,8 @@ class PlotLocalizedStates:
                             else:
                                 x_text = x_values[kpoint_idx]
                                 ha_text = 'left'  
-                            ax.text(x_text, eig, f"{band_index}", ha=ha_text,**plot_settings["index_text_settings"])
+                            ax.text(x_text, eig,fr"${band_index}$", ha=ha_text,**plot_settings["index_text_settings"])
                         band_index += 1 
-
                 kpoint_idx += 1 
 
             # Scatter plot setting 
@@ -250,6 +253,7 @@ class PlotLocalizedStates:
                                fermi_energy_reference: bool = True,
                                show_fill_up: bool = True,
                                show_band_index = False,
+                               band_indix_label_limit=None,
                                tolerance=2e-1,
                                norm:bool=True,
                                **plot_settings
@@ -315,6 +319,7 @@ class PlotLocalizedStates:
                                            fermi_energy_reference=fermi_energy_reference,
                                            show_fill_up=show_fill_up,
                                            show_band_index=show_band_index,
+                                           band_indix_label_limit=band_indix_label_limit,
                                            colorbar_label="IOWs",**plot_settings)
         return fig
     
@@ -327,6 +332,7 @@ class PlotLocalizedStates:
                               fermi_energy_reference: bool = True,
                               show_fill_up: bool = True,
                               show_band_index:bool = False,
+                              band_indix_label_limit=None,
                               lsorbit:bool=False, 
                               lgamma:bool=False,
                               gamma_half:str='x',
@@ -415,6 +421,7 @@ class PlotLocalizedStates:
                                            fermi_energy_reference=fermi_energy_reference,
                                            show_fill_up=show_fill_up,
                                            show_band_index = show_band_index,
+                                           band_indix_label_limit=band_indix_label_limit,
                                            colorbar_label="IPRs",
                                            **plot_setting)
         return fig

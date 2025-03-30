@@ -143,7 +143,6 @@ class PlotKohnShamEigenvalue:
         "figsize":(8,6),
         "layout": "horizontal",
         "index_text_settings":{"fontsize":10},
-        "band_index_expand_between_VBM_CBM": (0.0,0.5)
         }
         
         # Validate keys
@@ -170,6 +169,7 @@ class PlotKohnShamEigenvalue:
                          fermi_energy_reference:bool = True,
                          show_fill_up:bool=True,
                          show_band_index:bool=False,
+                         band_indix_label_limit = None,
                          **plot_setting
                          )-> plt.Figure:
         
@@ -225,6 +225,9 @@ class PlotKohnShamEigenvalue:
         # If the energies are referenced to energy fermi
         y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
         y_value_CBM = CBM - VBM if fermi_energy_reference else CBM
+
+        if band_indix_label_limit == None:
+            band_indix_label_limit = (y_value_VBM,y_value_CBM) 
         
         # Number of subplots needed (one for each spin)
         num_spins = len(classified_eigenvalues)  
@@ -307,7 +310,7 @@ class PlotKohnShamEigenvalue:
                     band_index = 1
                     # Add text labels for each eigenvalue
                     for eig in _eigenvalues:
-                        if  y_value_VBM - plot_settings["band_index_expand_between_VBM_CBM"][0] < eig < y_value_CBM + plot_settings["band_index_expand_between_VBM_CBM"][1]:
+                        if  band_indix_label_limit[0] <= eig <= band_indix_label_limit[1]:
                             # If band_index is even, move text to the left; if odd, move it to the right
                             if band_index % 2 == 0:
                                 x_text = x_values[kpoint_idx] 
@@ -315,7 +318,7 @@ class PlotKohnShamEigenvalue:
                             else:
                                 x_text = x_values[kpoint_idx]
                                 ha_text = 'left'  
-                            ax.text(x_text, eig, f"{band_index}", ha=ha_text,**plot_settings["index_text_settings"])
+                            ax.text(x_text, eig,fr"${band_index}$", ha=ha_text,**plot_settings["index_text_settings"])
                         band_index += 1 
                 
             # Add a single legend for each spin plot
@@ -385,6 +388,7 @@ class PlotKohnShamEigenvalue:
                                 fermi_energy_reference:bool = True,
                                 show_fill_up:bool = True,
                                 show_band_index:bool = False,
+                                band_indix_label_limit:bool = None,
                                 **plot_setting
                                 )-> plt.Figure:
         """
@@ -420,5 +424,11 @@ class PlotKohnShamEigenvalue:
 
         # Create an instance of PlotEigenvalue class 
         plotter = PlotKohnShamEigenvalue(eigenvalues_dict, occupancy_dict, kpoints_dict)
-        fig = plotter.plot_KS_eigenvalues(VBM=VBM,CBM=CBM,y_limit=y_limit,fermi_energy_reference=fermi_energy_reference,show_fill_up=show_fill_up,show_band_index=show_band_index,**plot_setting)
+        fig = plotter.plot_KS_eigenvalues(VBM=VBM,
+                                          CBM=CBM,y_limit=y_limit,
+                                          fermi_energy_reference=fermi_energy_reference,
+                                          show_fill_up=show_fill_up,
+                                          show_band_index=show_band_index,
+                                          band_indix_label_limit=band_indix_label_limit,
+                                          **plot_setting)
         return fig
