@@ -136,7 +136,7 @@ class PlotKohnShamEigenvalue:
         "fill_up_alpha": 0.3,
         "title_names":{"up":"Spin up:","down":"Spin down:"},
         "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 14},
-        "xlabel":"K-Points",
+        "xlabel": r"$\mathbf{k}$-points",
         "ylabel":"Eigenvalues [eV]",
         "label_size": 16,
         "legend_loc": "upper right",

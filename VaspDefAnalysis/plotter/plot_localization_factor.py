@@ -80,7 +80,7 @@ class PlotLocalizedStates:
             "fill_up_alpha": 0.3,
             "title_names":{"up":"Spin up:","down":"Spin down:"},
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
-            "xlabel": "K-Points",
+            "xlabel": r"$\mathbf{k}$-points",
             "ylabel": "Eigenvalues [eV]",
             "colorbar_label": "Location factor",
             "label_size": 16,
