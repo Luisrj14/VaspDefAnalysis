@@ -10,7 +10,7 @@ venv/
 .DS_Store
 
 # Ignore Jupyter notebooks
-*.ipynb
+#*.ipynb
 
 # Ignore foder creat by  pip editable mode (pip install -e ): VaspDefAnalisys.egg-info/
 VaspDefAnalisys.egg-info/
