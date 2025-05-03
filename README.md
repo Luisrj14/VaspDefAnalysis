@@ -26,5 +26,5 @@
 
 ## Contact info
 
-J.L.R Arteta 
+Arteta J.L.R 
 luisrj@uio.no 
