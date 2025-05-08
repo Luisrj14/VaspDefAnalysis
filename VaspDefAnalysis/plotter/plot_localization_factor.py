@@ -79,12 +79,12 @@ class PlotLocalizedStates:
             "fill_up_color_vb": "grey",
             "fill_up_color_cb": "grey", 
             "fill_up_alpha": 0.3,
-            "title_names":{"up":"Spin up:","down":"Spin down:"},
-            "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
+            "title_names":{"up":"Spin-up:","down":"Spin-down:"},
+            "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 15},
             "xlabel": r"$\mathbf{k}$-points",
             "ylabel": "Eigenvalues [eV]",
             "colorbar_label": "Location factor",
-            "label_size": 16,
+            "label_size": 18,
             "figsize":(8,6),
             "layout": "horizontal",
             "index_text_settings":{"fontsize":10},
@@ -92,10 +92,10 @@ class PlotLocalizedStates:
         }
         
         # Validate keys
-        valid_keys = default_settings.keys()
-        invalid_keys = [key for key in plot_settings if key not in valid_keys]
-        if invalid_keys:
-            raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
+        #valid_keys = default_settings.keys()
+        #invalid_keys = [key for key in plot_settings if key not in valid_keys]
+        #if invalid_keys:
+        #    raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
     
         # Update nested dictionary-based settings with user-provided values
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
@@ -226,7 +226,7 @@ class PlotLocalizedStates:
             ax.set_ylabel(plot_settings["ylabel"], size=plot_settings["label_size"])
             title = plot_settings["title_names"].get("up" if spin_key == 'spin 1' else "down")
             ax.set_title(title, fontdict=plot_settings["fontdict_title"])
-
+            ax.tick_params(**plot_settings) # X and Y axis ticks
             # Plot VBM/CBM lines and fill regions
             if show_fill_up:
                 ax.axhline(y=y_value_VBM, color=plot_settings["vbm_color"], linestyle=plot_settings["vbm_line_style"])

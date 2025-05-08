@@ -134,11 +134,11 @@ class PlotKohnShamEigenvalue:
         "fill_up_color_vb": "grey",
         "fill_up_color_cb": "grey", 
         "fill_up_alpha": 0.3,
-        "title_names":{"up":"Spin up:","down":"Spin down:"},
-        "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 14},
+        "title_names":{"up":"Spin-up:","down":"Spin-down:"},
+        "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 15},
         "xlabel": r"$\mathbf{k}$-points",
         "ylabel":"Eigenvalues [eV]",
-        "label_size": 16,
+        "label_size": 18,
         "legend_loc": "upper right",
         "figsize":(8,6),
         "layout": "horizontal",
@@ -146,10 +146,10 @@ class PlotKohnShamEigenvalue:
         }
         
         # Validate keys
-        valid_keys = default_settings.keys()
-        invalid_keys = [key for key in plot_setting if key not in valid_keys]
-        if invalid_keys:
-            raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
+        #valid_keys = default_settings.keys()
+        #invalid_keys = [key for key in plot_setting if key not in valid_keys]
+        #if invalid_keys:
+        #    raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
     
         # Separate out dictionary-based settings to be updated
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
@@ -357,7 +357,7 @@ class PlotKohnShamEigenvalue:
 
             # Legend location    
             ax.legend(loc=plot_settings["legend_loc"])
-
+            ax.tick_params(**plot_setting) # X and Y axis ticks
             # Conditionally display the shaded region VB and CB
             if show_fill_up:
                 ax.axhspan(
