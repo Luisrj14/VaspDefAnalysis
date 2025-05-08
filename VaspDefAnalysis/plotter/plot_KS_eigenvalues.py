@@ -147,10 +147,10 @@ class PlotKohnShamEigenvalue:
         }
         
         # Validate keys
-        #valid_keys = default_settings.keys()
-        #invalid_keys = [key for key in update_default_settings if key not in valid_keys]
-        #if invalid_keys:
-        #    raise ValueError(f"Invalid keys in plot_settings: {invalid_keys}")
+        valid_keys = default_settings.keys()
+        invalid_keys = [key for key in update_default_settings if key not in valid_keys]
+        if invalid_keys:
+            raise ValueError(f"Invalid keys in plot_settings: {invalid_keys}")
     
         # Separate out dictionary-based settings to be updated
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
