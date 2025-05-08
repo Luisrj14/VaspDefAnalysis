@@ -1,6 +1,7 @@
 # Packages
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 
 #from VaspDefAnalysis.defect.defect_analisys import StructureComparator
 from VaspDefAnalysis.read_vasp.vasprun_analysis import VaspRunAnalysis
@@ -236,6 +237,11 @@ class PlotLocalizedStates:
 
             spin_idx += 1
 
+            # Force scientific notation
+            formatter = ScalarFormatter()
+            formatter.set_scientific(True)
+            formatter.set_powerlimits((-1, 1))  # Forces scientific notation outside this range
+            cbar.ax.yaxis.set_major_formatter(formatter)
         # Adjust subplot spacing and return the figure
         fig.tight_layout() 
         #plt.close()
