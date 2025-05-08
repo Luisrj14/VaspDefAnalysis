@@ -54,13 +54,13 @@ class PlotLocalizedStates:
         nice_x_labels = generate_fraction_labels_for_kpoints(kpt_coords=kpt_coords, line_break=line_break)
         return nice_x_labels
     
-    def plot_setting(self, **plot_settings):
+    def default_settings(self, **update_default_settings):
         """
         Handle and validate keyword arguments for plot customization.
 
         Parameters:
         ----------
-        plot_setting : dict
+        plot_settings : dict
             Arbitrary keyword arguments for plot customization.
 
         Returns:
@@ -85,6 +85,7 @@ class PlotLocalizedStates:
             "ylabel": "Eigenvalues [eV]",
             "colorbar_label": "Location factor",
             "label_size": 18,
+            "label_font_size": 14,
             "figsize":(8,6),
             "layout": "horizontal",
             "index_text_settings":{"fontsize":10},
@@ -93,18 +94,18 @@ class PlotLocalizedStates:
         
         # Validate keys
         #valid_keys = default_settings.keys()
-        #invalid_keys = [key for key in plot_settings if key not in valid_keys]
+        #invalid_keys = [key for key in update_default_settings if key not in valid_keys]
         #if invalid_keys:
-        #    raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
+        #    raise ValueError(f"Invalid keys in plot_settings: {invalid_keys}")
     
         # Update nested dictionary-based settings with user-provided values
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
         for dict_key in dict_keys:
-            if dict_key in plot_settings:
-                plot_settings[dict_key] = {**default_settings[dict_key], **plot_settings[dict_key]}
+            if dict_key in update_default_settings:
+                update_default_settings[dict_key] = {**default_settings[dict_key], **update_default_settings[dict_key]}
     
         # Update default settings with user-provided settings
-        validated_settings = {**default_settings, **plot_settings}
+        validated_settings = {**default_settings, **update_default_settings}
         return validated_settings
     
     def plot_localized_state(
@@ -134,7 +135,7 @@ class PlotLocalizedStates:
             Whether to use VBM as a reference energy. Default is True.
         show_fill_up : bool, optional
             Whether to fill regions above CBM and below VBM. Default is True.
-        plot_setting : dict
+        plot_settings : dict
             Custom settings for plot appearance.
 
         Returns:
@@ -144,7 +145,7 @@ class PlotLocalizedStates:
         """
 
         # Handle plot settings
-        plot_settings = self.plot_setting(**plot_settings)
+        plot_default_settings = self.default_settings(**plot_settings)
 
         # If the energies are referenced to energy fermi
         y_value_VBM = VBM - VBM if fermi_energy_reference else VBM
@@ -157,15 +158,15 @@ class PlotLocalizedStates:
         num_spins = len(self.eigenvalues_dict)
         
         # Determine the number of rows and columns based on layout
-        if plot_settings["layout"] == "horizontal":
+        if plot_default_settings["layout"] == "horizontal":
             rows, cols = 1, num_spins
-        elif plot_settings["layout"] == "vertical":
+        elif plot_default_settings["layout"] == "vertical":
             rows, cols = num_spins, 1
         else:
             raise ValueError("Invalid layout. Choose 'horizontal' or 'vertical'.")
 
         # Create subplots
-        fig, axes = plt.subplots(rows, cols, figsize=plot_settings["figsize"])
+        fig, axes = plt.subplots(rows, cols, figsize=plot_default_settings["figsize"])
         
         # Ensure axes is always iterable
         axes = [axes] if num_spins == 1 else axes
@@ -197,7 +198,7 @@ class PlotLocalizedStates:
                 max_KS.append(max(eigenvalues))
                 
                 # Scatter plot
-                scatter = ax.scatter([x_values[kpoint_idx]] * len(eigenvalues), eigenvalues, c=localized_values, **plot_settings["scatter_settings"])  
+                scatter = ax.scatter([x_values[kpoint_idx]] * len(eigenvalues), eigenvalues, c=localized_values, **plot_default_settings["scatter_settings"])  
 
                 if show_band_index: 
                     band_index = 1
@@ -211,29 +212,32 @@ class PlotLocalizedStates:
                             else:
                                 x_text = x_values[kpoint_idx]
                                 ha_text = 'left'  
-                            ax.text(x_text, eig,fr"${band_index}$", ha=ha_text,**plot_settings["index_text_settings"])
+                            ax.text(x_text, eig,fr"${band_index}$", ha=ha_text,**plot_default_settings["index_text_settings"])
                         band_index += 1 
                 kpoint_idx += 1 
 
             # Scatter plot setting 
-            cbar = plt.colorbar(scatter, ax=ax, label=plot_settings["colorbar_label"])
-            cbar.set_label(label=plot_settings["colorbar_label"], fontsize=plot_settings["label_size"])
+            cbar = plt.colorbar(scatter, ax=ax, label=plot_default_settings["colorbar_label"])
+            cbar.set_label(label=plot_default_settings["colorbar_label"], fontsize=plot_default_settings["label_size"])
+            cbar.ax.tick_params(labelsize=plot_default_settings["label_font_size"])     # Colorbar ticks
 
             # Set axis labels and titles
             ax.set_xticks(x_values)
             ax.set_xticklabels(_x_labels, rotation=0.0, ha="right")
-            ax.set_xlabel(plot_settings["xlabel"], size=plot_settings["label_size"])
-            ax.set_ylabel(plot_settings["ylabel"], size=plot_settings["label_size"])
-            title = plot_settings["title_names"].get("up" if spin_key == 'spin 1' else "down")
-            ax.set_title(title, fontdict=plot_settings["fontdict_title"])
-            ax.tick_params(**plot_settings) # X and Y axis ticks
+            ax.set_xlabel(plot_default_settings["xlabel"], size=plot_default_settings["label_size"])
+            ax.set_ylabel(plot_default_settings["ylabel"], size=plot_default_settings["label_size"])
+            title = plot_default_settings["title_names"].get("up" if spin_key == 'spin 1' else "down")
+            ax.set_title(title, fontdict=plot_default_settings["fontdict_title"])
+            ax.tick_params(labelsize=plot_default_settings["label_font_size"]) # X and Y axis ticks
+            
+            
             # Plot VBM/CBM lines and fill regions
             if show_fill_up:
-                ax.axhline(y=y_value_VBM, color=plot_settings["vbm_color"], linestyle=plot_settings["vbm_line_style"])
-                ax.axhline(y=y_value_CBM, color=plot_settings["cbm_color"], linestyle=plot_settings["cbm_line_style"])
+                ax.axhline(y=y_value_VBM, color=plot_default_settings["vbm_color"], linestyle=plot_default_settings["vbm_line_style"])
+                ax.axhline(y=y_value_CBM, color=plot_default_settings["cbm_color"], linestyle=plot_default_settings["cbm_line_style"])
             if show_fill_up:
-                ax.axhspan(min(min_KS), y_value_VBM, color=plot_settings["fill_up_color_vb"], alpha=plot_settings["fill_up_alpha"])
-                ax.axhspan(y_value_CBM, max(max_KS), color=plot_settings["fill_up_color_cb"], alpha=plot_settings["fill_up_alpha"])
+                ax.axhspan(min(min_KS), y_value_VBM, color=plot_default_settings["fill_up_color_vb"], alpha=plot_default_settings["fill_up_alpha"])
+                ax.axhspan(y_value_CBM, max(max_KS), color=plot_default_settings["fill_up_color_cb"], alpha=plot_default_settings["fill_up_alpha"])
 
             spin_idx += 1
 
@@ -291,7 +295,7 @@ class PlotLocalizedStates:
             Tolerance for identifying defect. Default is `1e-3`.
         norm : bool, optional
             If True, normalizes the weights by the total weight for each k-point. Defaults to `True`.
-        **plot_setting
+        **plot_settings
             Additional keyword arguments for customizing the plot appearance.
 
         Returns:
@@ -345,7 +349,7 @@ class PlotLocalizedStates:
                               omp_num_threads:int=1,
                               norm:bool=True,
                               gvec=None, Cg=None,ngrid=None,rescale=None,kr_phase=False, r0=[0.0, 0.0, 0.0],
-                              **plot_setting
+                              **plot_settings
                               ):
         
         """
@@ -388,7 +392,7 @@ class PlotLocalizedStates:
         r0 : shift of the kr-phase to get full wfc other than primitive cell
              It is by default  [0.0, 0.0, 0.0]
 
-        **plot_setting:
+        **plot_settings:
             Additional keyword arguments for customizing the plot appearance.
         
         Returns:
@@ -429,7 +433,7 @@ class PlotLocalizedStates:
                                            show_band_index = show_band_index,
                                            band_indix_label_limit=band_indix_label_limit,
                                            colorbar_label="IPRs",
-                                           **plot_setting)
+                                           **plot_settings)
         return fig
         
 

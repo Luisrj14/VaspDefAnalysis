@@ -103,13 +103,13 @@ class PlotKohnShamEigenvalue:
         nice_x_labels = generate_fraction_labels_for_kpoints(kpt_coords=kpt_coords,line_break=line_break)
         return nice_x_labels
     
-    def plot_setting(self, **plot_setting):
+    def default_settings(self, **update_default_settings):
         """
         Handle and validate keyword arguments for plot customization.
 
         Parameters:
         ----------
-        plot_setting : dict
+        plot_settings : dict
             Arbitrary keyword arguments for plot customization.
 
         Returns:
@@ -139,6 +139,7 @@ class PlotKohnShamEigenvalue:
         "xlabel": r"$\mathbf{k}$-points",
         "ylabel":"Eigenvalues [eV]",
         "label_size": 18,
+        "label_font_size": 14,
         "legend_loc": "upper right",
         "figsize":(8,6),
         "layout": "horizontal",
@@ -147,19 +148,19 @@ class PlotKohnShamEigenvalue:
         
         # Validate keys
         #valid_keys = default_settings.keys()
-        #invalid_keys = [key for key in plot_setting if key not in valid_keys]
+        #invalid_keys = [key for key in update_default_settings if key not in valid_keys]
         #if invalid_keys:
-        #    raise ValueError(f"Invalid keys in plot_setting: {invalid_keys}")
+        #    raise ValueError(f"Invalid keys in plot_settings: {invalid_keys}")
     
         # Separate out dictionary-based settings to be updated
         dict_keys = ['fontdict_title', 'scatter_settings', 'title_names']
         for dict_key in dict_keys:
-            if dict_key in plot_setting:
-                # Update the existing dictionary with new settings from plot_setting
-                plot_setting[dict_key] = {**default_settings[dict_key], **plot_setting[dict_key]}
+            if dict_key in update_default_settings:
+                # Update the existing dictionary with new settings from plot_settings
+                update_default_settings[dict_key] = {**default_settings[dict_key], **update_default_settings[dict_key]}
     
         # Update default settings with user-provided settings
-        validated_settings = {**default_settings, **plot_setting}
+        validated_settings = {**default_settings, **update_default_settings}
         return validated_settings
 
     def plot_KS_eigenvalues(self, 
@@ -170,7 +171,7 @@ class PlotKohnShamEigenvalue:
                          show_fill_up:bool=True,
                          show_band_index:bool=False,
                          band_indix_label_limit = None,
-                         **plot_setting
+                         **plot_settings
                          )-> plt.Figure:
         
         """
@@ -191,7 +192,7 @@ class PlotKohnShamEigenvalue:
         show_fill_up : bool, optional
             If True, fills the regions below VBM and above CBM to visually represent occupied/unoccupied states.
             Default is False.
-        **plot_setting : dict
+        **plot_settings : dict
             Additional plot customization settings, such as:
                 - occupied_color: Color for occupied eigenvalues.
                 - occupied_marker: Marker style for occupied eigenvalues.
@@ -217,7 +218,7 @@ class PlotKohnShamEigenvalue:
         """
         
         # Handle plot settings
-        plot_settings = self.plot_setting(**plot_setting)
+        plot_default_settings = self.default_settings(**plot_settings)
                 
         # Use classified eigenvalues for better organization
         classified_eigenvalues = self.classify_eigenvalues_to_occupancy()
@@ -233,15 +234,15 @@ class PlotKohnShamEigenvalue:
         num_spins = len(classified_eigenvalues)  
         
         # Determine the number of rows and columns based on layout
-        if plot_settings["layout"] == "horizontal":
+        if plot_default_settings["layout"] == "horizontal":
             rows, cols = 1, num_spins
-        elif plot_settings["layout"] == "vertical":
+        elif plot_default_settings["layout"] == "vertical":
             rows, cols = num_spins, 1
         else:
             raise ValueError("Invalid layout. Choose 'horizontal' or 'vertical'.")
         
         # Create subplots
-        fig, axes = plt.subplots(rows, cols, figsize=plot_settings["figsize"])
+        fig, axes = plt.subplots(rows, cols, figsize=plot_default_settings["figsize"])
         
         # If only one subplot, axes will not be an array, so handle it accordingly
         if num_spins == 1:
@@ -292,17 +293,17 @@ class PlotKohnShamEigenvalue:
                 # Plot occupied eigenvalues for this k-point
                 if len(occupied_eigenvalues) > 0:
                     ax.scatter([x_values[kpoint_idx]] * len(occupied_eigenvalues), occupied_eigenvalues,
-                               color=plot_settings["occupied_color"], marker=plot_settings["occupied_marker"],**plot_settings['scatter_settings'])
+                               color=plot_default_settings["occupied_color"], marker=plot_default_settings["occupied_marker"],**plot_default_settings['scatter_settings'])
 
                 # Plot unoccupied eigenvalues for this k-point
                 if len(unoccupied_eigenvalues) > 0:
                     ax.scatter([x_values[kpoint_idx]] * len(unoccupied_eigenvalues), unoccupied_eigenvalues,
-                               color=plot_settings["unoccupied_color"], marker=plot_settings["unoccupied_marker"],**plot_settings['scatter_settings'])
+                               color=plot_default_settings["unoccupied_color"], marker=plot_default_settings["unoccupied_marker"],**plot_default_settings['scatter_settings'])
                     
                 # Plot partial occupied eigenvalues for this k-point
                 if len(partial_occupied_eigenvalue) > 0:
                     ax.scatter([x_values[kpoint_idx]] * len(partial_occupied_eigenvalue), partial_occupied_eigenvalue,
-                               color=plot_settings["partial_color"], marker=plot_settings["partial_marker"],**plot_settings['scatter_settings'])
+                               color=plot_default_settings["partial_color"], marker=plot_default_settings["partial_marker"],**plot_default_settings['scatter_settings'])
                 
                 if show_band_index: 
                     if fermi_energy_reference:
@@ -318,59 +319,59 @@ class PlotKohnShamEigenvalue:
                             else:
                                 x_text = x_values[kpoint_idx]
                                 ha_text = 'left'  
-                            ax.text(x_text, eig,fr"${band_index}$", ha=ha_text,**plot_settings["index_text_settings"])
+                            ax.text(x_text, eig,fr"${band_index}$", ha=ha_text,**plot_default_settings["index_text_settings"])
                         band_index += 1 
                 
             # Add a single legend for each spin plot
             if len(occupied_eigenvalues) > 0:
-                ax.scatter([], [], color=plot_settings["occupied_color"], marker=plot_settings["occupied_marker"], label='Occupied',**plot_settings['scatter_settings'])
+                ax.scatter([], [], color=plot_default_settings["occupied_color"], marker=plot_default_settings["occupied_marker"], label='Occupied',**plot_default_settings['scatter_settings'])
             if len(unoccupied_eigenvalues) > 0:
-                ax.scatter([], [], color=plot_settings["unoccupied_color"], marker=plot_settings["unoccupied_marker"], label='Unoccupied',**plot_settings['scatter_settings'])
+                ax.scatter([], [], color=plot_default_settings["unoccupied_color"], marker=plot_default_settings["unoccupied_marker"], label='Unoccupied',**plot_default_settings['scatter_settings'])
             if len(partial_occupied_eigenvalue) > 0:
-                ax.scatter([], [], color=plot_settings["partial_color"], marker=plot_settings["partial_marker"], label='Partial occupied',**plot_settings['scatter_settings'])
+                ax.scatter([], [], color=plot_default_settings["partial_color"], marker=plot_default_settings["partial_marker"], label='Partial occupied',**plot_default_settings['scatter_settings'])
                  
             # Set x-ticks and labels
             ax.set_xticks(x_values)  # The x-values are the indices of the k-points
             ax.set_xticklabels(_x_labels, rotation=0.0, ha="right")  # Apply the formatted labels
 
-            ax.set_xlabel(plot_settings["xlabel"],size=plot_settings["label_size"])
-            ax.set_ylabel(plot_settings["ylabel"],size=plot_settings["label_size"])
+            ax.set_xlabel(plot_default_settings["xlabel"],size=plot_default_settings["label_size"])
+            ax.set_ylabel(plot_default_settings["ylabel"],size=plot_default_settings["label_size"])
 
             # Set titles of the subplots
             if spin_key == 'spin 1':
-                title = plot_settings["title_names"]["up"]
+                title = plot_default_settings["title_names"]["up"]
                 if num_spins == 1:
                     title= None
             elif spin_key == 'spin 2':
-                title = plot_settings["title_names"]["down"]
+                title = plot_default_settings["title_names"]["down"]
             else:
                 raise ValueError(f"Error: Invalid spin key '{spin_key}' provided for title.")
             ax.set_title(
                         title,
-                        fontdict= plot_settings["fontdict_title"]
+                        fontdict= plot_default_settings["fontdict_title"]
                         )
             
             # Optionally plot valence and conduction band lines with custom line styles
-            if plot_settings["show_vbm_cbm"]:
-                ax.axhline(y=y_value_VBM, color=plot_settings["vbm_color"], linestyle=plot_settings["vbm_line_style"])
-                ax.axhline(y=y_value_CBM, color=plot_settings["cbm_color"], linestyle=plot_settings["cbm_line_style"])
+            if plot_default_settings["show_vbm_cbm"]:
+                ax.axhline(y=y_value_VBM, color=plot_default_settings["vbm_color"], linestyle=plot_default_settings["vbm_line_style"])
+                ax.axhline(y=y_value_CBM, color=plot_default_settings["cbm_color"], linestyle=plot_default_settings["cbm_line_style"])
 
             # Legend location    
-            ax.legend(loc=plot_settings["legend_loc"])
-            ax.tick_params(**plot_setting) # X and Y axis ticks
+            ax.legend(loc=plot_default_settings["legend_loc"])
+            ax.tick_params(labelsize=plot_default_settings["label_font_size"]) # X and Y axis ticks
             # Conditionally display the shaded region VB and CB
             if show_fill_up:
                 ax.axhspan(
                     ymin=min(minimum_ocucupied_eigenvalues),
                     ymax=y_value_VBM,
-                    color = plot_settings["fill_up_color_vb"] ,
-                    alpha = plot_settings["fill_up_alpha"]  # Should use plot_settings here
+                    color = plot_default_settings["fill_up_color_vb"] ,
+                    alpha = plot_default_settings["fill_up_alpha"] 
                     )
                 ax.axhspan(
                     ymin=y_value_CBM,
                     ymax=max(maximum_unoccupied_eigenvalues),
-                    color = plot_settings["fill_up_color_cb"],  # Should use plot_settings here
-                    alpha = plot_settings["fill_up_alpha"]  # Should use plot_settings here
+                    color = plot_default_settings["fill_up_color_cb"], 
+                    alpha = plot_default_settings["fill_up_alpha"] 
                     )   
         
         # Adjust spacing between subplots for better readability
@@ -389,7 +390,7 @@ class PlotKohnShamEigenvalue:
                                 show_fill_up:bool = True,
                                 show_band_index:bool = False,
                                 band_indix_label_limit:bool = None,
-                                **plot_setting
+                                **plot_settings
                                 )-> plt.Figure:
         """
         A static method to plot Kohn-Sham eigenvalues.
@@ -408,7 +409,7 @@ class PlotKohnShamEigenvalue:
             Whether to use the Fermi energy as the reference energy (default: True).
         show_fill_up : bool, optional
             Whether to visually highlight the occupied states (default: False).
-        **plot_setting : dict
+        **plot_settings : dict
             Additional settings for customizing the plot (e.g., colors, line styles).
 
         Returns:
@@ -430,5 +431,5 @@ class PlotKohnShamEigenvalue:
                                           show_fill_up=show_fill_up,
                                           show_band_index=show_band_index,
                                           band_indix_label_limit=band_indix_label_limit,
-                                          **plot_setting)
+                                          **plot_settings)
         return fig

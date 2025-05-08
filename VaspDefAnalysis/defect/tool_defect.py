@@ -86,8 +86,10 @@ def get_ion_orbital_total_weight_neighbors_to_defects(
     if norm:
         # Normalize weights at the end
         for spin_key, kpoint_data in weights.items():
+            total_weight_kpoint = 0.0
             for kpoint_key, band_weights in kpoint_data.items():
-                total_weight_kpoint = sum(band_weights)  # Total weight for the k-point
+                total_weight_kpoint = total_weight_kpoint+sum(band_weights)  # Total weight for the k-point
+            for kpoint_key, band_weights in kpoint_data.items():    
                 if total_weight_kpoint > 0:
                     # Normalize each band's weight by the total k-point weight
                     weights[spin_key][kpoint_key] = [weight / total_weight_kpoint for weight in band_weights]
