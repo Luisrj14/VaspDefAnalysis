@@ -138,8 +138,9 @@ class PlotKohnShamEigenvalue:
         "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 15},
         "xlabel": r"$\mathbf{k}$-points",
         "ylabel":"Eigenvalues [eV]",
-        "label_size": 18,
-        "label_font_size": 14,
+        "label_size": 14,
+        "x_y_label_size": 22,
+        "label_font_size": 16,
         "legend_loc": "upper right",
         "figsize":(8,6),
         "layout": "horizontal",
@@ -334,8 +335,8 @@ class PlotKohnShamEigenvalue:
             ax.set_xticks(x_values)  # The x-values are the indices of the k-points
             ax.set_xticklabels(_x_labels, rotation=0.0, ha="right")  # Apply the formatted labels
 
-            ax.set_xlabel(plot_default_settings["xlabel"],size=plot_default_settings["label_size"])
-            ax.set_ylabel(plot_default_settings["ylabel"],size=plot_default_settings["label_size"])
+            ax.set_xlabel(plot_default_settings["xlabel"],size=plot_default_settings["x_y_label_size"])
+            ax.set_ylabel(plot_default_settings["ylabel"],size=plot_default_settings["x_y_label_size"])
 
             # Set titles of the subplots
             if spin_key == 'spin 1':
@@ -357,7 +358,7 @@ class PlotKohnShamEigenvalue:
                 ax.axhline(y=y_value_CBM, color=plot_default_settings["cbm_color"], linestyle=plot_default_settings["cbm_line_style"])
 
             # Legend location    
-            ax.legend(loc=plot_default_settings["legend_loc"])
+            ax.legend(loc=plot_default_settings["legend_loc"],fontsize = plot_default_settings['label_size'])
             ax.tick_params(labelsize=plot_default_settings["label_font_size"]) # X and Y axis ticks
             # Conditionally display the shaded region VB and CB
             if show_fill_up:

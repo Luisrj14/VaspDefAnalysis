@@ -28,7 +28,7 @@ class ConvergencePlot(ConvergenceTools):
         self.axis_x_name = axis_x_name
         self.axis_y_name = axis_y_name
 
-    def plot_setting(self, **plot_setting):
+    def default_setting(self, **plot_setting):
         """
         Handle and validate keyword arguments for plot customization.
 
@@ -44,8 +44,9 @@ class ConvergencePlot(ConvergenceTools):
         """
         default_settings = {
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 14},
-            "label_size": 10,
-            "x_y_label_size": 16,
+            "label_size": 14,
+            "label_font_size": 16,
+            "x_y_label_size": 22,
             "figsize": (8, 6),
             "curve_settings":{"color":"black","marker": ">"},
             "criterion_settings": {"linestyle": ":", "color": "red"},
@@ -110,34 +111,34 @@ class ConvergencePlot(ConvergenceTools):
         #if len(relative_values) != len(cutoff_values):
         #    raise ValueError("Lengths of relative_values and cutoff_values must match.")
 
-        plot_settings = self.plot_setting(**settings)
+        plot_default_settings = self.default_setting(**settings)
         
-        fig, ax = plt.subplots(figsize=plot_settings["figsize"])
+        fig, ax = plt.subplots(figsize=plot_default_settings["figsize"])
         cutoff_values_new, convergence_cutoff_values = super().find_convergence_values(relative_values, cutoff_values, conv_criterion)
 
         if y_log: 
-            ax.semilogy(cutoff_values_new, relative_values, label=self.label_relative_values,**plot_settings['curve_settings'])
+            ax.semilogy(cutoff_values_new, relative_values, label=self.label_relative_values,**plot_default_settings['curve_settings'])
         else:
-            ax.plot(cutoff_values_new, relative_values, label=self.label_relative_values,**plot_settings['curve_settings'])
+            ax.plot(cutoff_values_new, relative_values, label=self.label_relative_values,**plot_default_settings['curve_settings'])
         
         ax.axhline(
             y=conv_criterion,
             label=self.label_conv_criterion,
-            **plot_settings['criterion_settings']
+            **plot_default_settings['criterion_settings']
         )
         
         if show_fill:
             ax.axhspan(
                 ymin=0.0,
                 ymax=conv_criterion,
-                **plot_settings["fill_settings"]
+                **plot_default_settings["fill_settings"]
             )
         
-        ax.set_title(self.title_name, fontdict=plot_settings['fontdict_title'])
-        ax.set_ylabel(self.axis_y_name,size=plot_settings["x_y_label_size"])
-        ax.set_xlabel(self.axis_x_name,size=plot_settings["x_y_label_size"])
-        ax.legend(loc=plot_settings["legend_loc"],fontsize = plot_settings['label_size'])
-
+        ax.set_title(self.title_name, fontdict=plot_default_settings['fontdict_title'])
+        ax.set_ylabel(self.axis_y_name,size=plot_default_settings["x_y_label_size"])
+        ax.set_xlabel(self.axis_x_name,size=plot_default_settings["x_y_label_size"])
+        ax.legend(loc=plot_default_settings["legend_loc"],fontsize = plot_default_settings['label_size'])
+        ax.tick_params(labelsize=plot_default_settings["label_font_size"]) # X and Y axis ticks
         # Adjust layout to prevent clipping of labels
         fig.tight_layout()
 
@@ -170,22 +171,22 @@ class ConvergencePlot(ConvergenceTools):
         if len(relative_values) != len(cutoff_values):
             raise ValueError("Lengths of relative_values and cutoff_values must match.")
 
-        plot_settings = self.plot_setting(**settings)
+        plot_default_settings = self.default_setting(**settings)
         
-        fig, ax = plt.subplots(figsize=plot_settings["figsize"])
+        fig, ax = plt.subplots(figsize=plot_default_settings["figsize"])
        
 
         if y_log: 
-            ax.semilogy(cutoff_values, relative_values, label=label_relative_values,**plot_settings['curve_settings'])
+            ax.semilogy(cutoff_values, relative_values, label=label_relative_values,**plot_default_settings['curve_settings'])
         else:
-            ax.plot(cutoff_values, relative_values, label=label_relative_values,**plot_settings['curve_settings'])
+            ax.plot(cutoff_values, relative_values, label=label_relative_values,**plot_default_settings['curve_settings'])
         
-        ax.set_title(self.title_name, fontdict=plot_settings['fontdict_title'])
-        ax.set_ylabel(self.axis_y_name,size=plot_settings["x_y_label_size"])
-        ax.set_xlabel(self.axis_x_name,size=plot_settings["x_y_label_size"])
+        ax.set_title(self.title_name, fontdict=plot_default_settings['fontdict_title'])
+        ax.set_ylabel(self.axis_y_name,size=plot_default_settings["x_y_label_size"])
+        ax.set_xlabel(self.axis_x_name,size=plot_default_settings["x_y_label_size"])
         if  label_relative_values != None :
-            ax.legend(loc=plot_settings["legend_loc"],fontsize = plot_settings['label_size'])
-
+            ax.legend(loc=plot_default_settings["legend_loc"],fontsize = plot_default_settings['label_size'])
+        ax.tick_params(labelsize=plot_default_settings["label_font_size"]) # X and Y axis ticks
         # Adjust layout to prevent clipping of labels
         fig.tight_layout()
 
