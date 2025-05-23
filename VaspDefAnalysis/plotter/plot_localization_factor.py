@@ -78,7 +78,8 @@ class PlotLocalizedStates:
             "show_vbm_cbm":True,
             "fill_up_color_vb": "grey",
             "fill_up_color_cb": "grey", 
-            "fill_up_alpha": 0.3,
+            "fill_up_alpha_cb": 0.3,
+            "fill_up_alpha_vb": 0.3,
             "title_names":{"up":"Spin-up:","down":"Spin-down:"},
             "fontdict_title": {"family": "serif", "color": "black", "weight": "bold", "size": 15},
             "xlabel": r"$\mathbf{k}$-points",
@@ -86,6 +87,7 @@ class PlotLocalizedStates:
             "colorbar_label": "Location factor",
             "label_size": 22,
             "label_font_size": 16,
+            "font_size_bar": 14,
             "figsize":(8,6),
             "layout": "horizontal",
             "index_text_settings":{"fontsize":10},
@@ -164,6 +166,14 @@ class PlotLocalizedStates:
             rows, cols = num_spins, 1
         else:
             raise ValueError("Invalid layout. Choose 'horizontal' or 'vertical'.")
+        
+        min_loc, max_loc = [], [] 
+        for spin_key, kpoint_keys in self.localized_paramter_dict.items():
+            for kpoint_key, localized_values in kpoint_keys.items():
+                non_zero_vals = [v for v in localized_values if v != 0]
+                min_loc.append(min(non_zero_vals))
+                max_loc.append(max(non_zero_vals))
+
 
         # Create subplots
         fig, axes = plt.subplots(rows, cols, figsize=plot_default_settings["figsize"])
@@ -189,17 +199,29 @@ class PlotLocalizedStates:
 
             # Save dat for the different kpoints for scatter plot
             min_KS, max_KS = [], []
-
+            #min_loc, max_loc = [], []
             kpoint_idx = 0 
             for (kpoint_key, eigenvalues), (kpoint_key_, localized_values) in zip(kpoint_keys.items(), kpoint_keys_.items()):
                 if fermi_energy_reference:
                     eigenvalues = list(np.array(eigenvalues)- VBM)
                 min_KS.append(min(eigenvalues))
                 max_KS.append(max(eigenvalues))
+                #non_zero_localized_values = [v for v in localized_values if v != 0]
+                #min_loc.append(min(non_zero_localized_values))
+                #max_loc.append(max(localized_values))
+                kpoint_idx += 1 
                 
+            kpoint_idx = 0 
+            for (kpoint_key, eigenvalues), (kpoint_key_, localized_values) in zip(kpoint_keys.items(), kpoint_keys_.items()):
+                if fermi_energy_reference:
+                    eigenvalues = list(np.array(eigenvalues)- VBM)
                 # Scatter plot
-                scatter = ax.scatter([x_values[kpoint_idx]] * len(eigenvalues), eigenvalues, c=localized_values, **plot_default_settings["scatter_settings"])  
-
+                cbarmin = min(min_loc)
+                if max(max_loc) / cbarmin >= 4:
+                    cbarmax = max(max_loc)
+                else:
+                    cbarmax = 4 * cbarmin
+                scatter = ax.scatter([x_values[kpoint_idx]] * len(eigenvalues), eigenvalues, c=localized_values,vmin=cbarmin, vmax=cbarmax, **plot_default_settings["scatter_settings"])  
                 if show_band_index: 
                     band_index = 1
                     # Add text labels for each eigenvalue
@@ -217,10 +239,12 @@ class PlotLocalizedStates:
                 kpoint_idx += 1 
 
             # Scatter plot setting 
+
             cbar = plt.colorbar(scatter, ax=ax, label=plot_default_settings["colorbar_label"])
             cbar.set_label(label=plot_default_settings["colorbar_label"], fontsize=plot_default_settings["label_size"])
             cbar.ax.tick_params(labelsize=plot_default_settings["label_font_size"])     # Colorbar ticks
-
+            cbar.ax.yaxis.get_offset_text().set_size(plot_default_settings["font_size_bar"])
+ 
             # Set axis labels and titles
             ax.set_xticks(x_values)
             ax.set_xticklabels(_x_labels, rotation=0.0, ha="right")
@@ -236,8 +260,8 @@ class PlotLocalizedStates:
                 ax.axhline(y=y_value_VBM, color=plot_default_settings["vbm_color"], linestyle=plot_default_settings["vbm_line_style"])
                 ax.axhline(y=y_value_CBM, color=plot_default_settings["cbm_color"], linestyle=plot_default_settings["cbm_line_style"])
             if show_fill_up:
-                ax.axhspan(min(min_KS), y_value_VBM, color=plot_default_settings["fill_up_color_vb"], alpha=plot_default_settings["fill_up_alpha"])
-                ax.axhspan(y_value_CBM, max(max_KS), color=plot_default_settings["fill_up_color_cb"], alpha=plot_default_settings["fill_up_alpha"])
+                ax.axhspan(min(min_KS), y_value_VBM, color=plot_default_settings["fill_up_color_vb"], alpha=plot_default_settings["fill_up_alpha_vb"])
+                ax.axhspan(y_value_CBM, max(max_KS), color=plot_default_settings["fill_up_color_cb"], alpha=plot_default_settings["fill_up_alpha_cb"])
 
             spin_idx += 1
 

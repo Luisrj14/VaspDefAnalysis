@@ -133,7 +133,8 @@ class PlotKohnShamEigenvalue:
         "show_vbm_cbm":True,
         "fill_up_color_vb": "grey",
         "fill_up_color_cb": "grey", 
-        "fill_up_alpha": 0.3,
+        "fill_up_alpha_cb": 0.3,
+        "fill_up_alpha_vb": 0.3,
         "title_names":{"up":"Spin-up:","down":"Spin-down:"},
         "fontdict_title": {"family": "serif","color": "black","weight": "bold","size": 15},
         "xlabel": r"$\mathbf{k}$-points",
@@ -366,13 +367,13 @@ class PlotKohnShamEigenvalue:
                     ymin=min(minimum_ocucupied_eigenvalues),
                     ymax=y_value_VBM,
                     color = plot_default_settings["fill_up_color_vb"] ,
-                    alpha = plot_default_settings["fill_up_alpha"] 
+                    alpha = plot_default_settings["fill_up_alpha_vb"] 
                     )
                 ax.axhspan(
                     ymin=y_value_CBM,
                     ymax=max(maximum_unoccupied_eigenvalues),
                     color = plot_default_settings["fill_up_color_cb"], 
-                    alpha = plot_default_settings["fill_up_alpha"] 
+                    alpha = plot_default_settings["fill_up_alpha_cb"] 
                     )   
         
         # Adjust spacing between subplots for better readability
